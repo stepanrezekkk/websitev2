@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Varo | Refined Architectural Hardware</title>
+    <meta name="description"
+        content="Varo Studio creates meticulously crafted architectural hardware in stone, brass, and bronze. Founded in Warsaw, 2026.">
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Lenis Smooth Scroll Library -->
+    <script src="https://unpkg.com/lenis@1.1.2/dist/lenis.min.js"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400&family=Playfair+Display:ital,wght@0,400;0,500;1,400&display=swap"
+        rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            charcoal: '#111111',
+                            sand: '#F7F5F0',
+                            stone: '#EDE9E4', /* Exact hex for seamless background */
+                            gold: '#C5B39A',
+                            muted: '#7A7A7A',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['"Playfair Display"', 'serif'],
+                    },
+                    animation: {
+                        'fade-up': 'fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'image-reveal': 'imageReveal 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                    },
+                    keyframes: {
+                        fadeUp: {
+                            '0%': { opacity: '0', transform: 'translateY(30px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        imageReveal: {
+                            '0%': { transform: 'scale(1.1)', opacity: '0' },
+                            '100%': { transform: 'scale(1)', opacity: '1' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #F7F5F0;
+            color: #111111;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Custom Selection */
+        ::selection {
+            background: #C5B39A;
+            color: #111111;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #F7F5F0;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #D1D1D1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #A3A3A3;
+        }
+
+        .header-transparent {
+            background: transparent;
+            border-bottom: 1px solid transparent;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Buttons */
+        .btn-outline {
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(17, 17, 17, 0.2);
+            transition: border-color 0.4s ease;
+        }
+
+        .btn-outline::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 0%;
+            background: #111111;
+            transition: height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: -1;
+        }
+
+        .btn-outline:hover {
+            border-color: #111111;
+            color: #F7F5F0;
+        }
+
+        .btn-outline:hover::after {
+            height: 100%;
+        }
+
+        .btn-outline-white {
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(247, 245, 240, 0.3);
+            color: #F7F5F0;
+            transition: border-color 0.4s ease;
+        }
+
+        .btn-outline-white::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 0%;
+            background: #F7F5F0;
+            transition: height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: -1;
+        }
+
+        .btn-outline-white:hover {
+            border-color: #F7F5F0;
+            color: #111111;
+        }
+
+        .btn-outline-white:hover::after {
+            height: 100%;
+        }
+
+        /* Image Hover Effects */
+        .image-zoom-container {
+            overflow: hidden;
+        }
+
+        .image-zoom-container img {
+            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .image-zoom-container:hover img {
+            transform: scale(1.05);
+        }
+
+        /* Magnetic Underline for Links */
+        .link-underline {
+            position: relative;
+        }
+
+        .link-underline::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            transform: scaleX(0);
+            height: 1px;
+            bottom: -2px;
+            left: 0;
+            background-color: currentColor;
+            transform-origin: bottom right;
+            transition: transform 0.4s cubic-bezier(0.86, 0, 0.07, 1);
+        }
+
+        .link-underline:hover::after {
+            transform: scaleX(1);
+            transform-origin: bottom left;
+        }
+
+        /* Reveal Animations via Intersection Observer */
+        .revealable {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .revealable.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .delay-100 {
+            transition-delay: 75ms;
+        }
+
+        .delay-200 {
+            transition-delay: 150ms;
+        }
+
+        .delay-300 {
+            transition-delay: 225ms;
+        }
+
+        /* Custom Cursor Styles */
+        @media (pointer: fine) {
+            .cursor-dot {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 8px;
+                height: 8px;
+                background: #ffffff;
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 9999;
+                transform: translate(-50%, -50%);
+                transition: width 0.3s, height 0.3s, opacity 0.3s;
+                mix-blend-mode: difference;
+            }
+
+            .cursor-outline {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 40px;
+                height: 40px;
+                border: 1px solid rgba(255, 255, 255, 0.4);
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 9998;
+                transform: translate(-50%, -50%);
+                transition: width 0.3s, height 0.3s, border-color 0.3s, background 0.3s;
+                mix-blend-mode: difference;
+            }
+
+            body:hover .cursor-dot,
+            body:hover .cursor-outline {
+                opacity: 1;
+            }
+
+            .cursor-outline.is-hovering {
+                width: 60px;
+                height: 60px;
+                background: rgba(255, 255, 255, 0.08);
+                border-color: transparent;
+            }
+
+            .cursor-dot.is-hovering {
+                width: 4px;
+                height: 4px;
+            }
+        }
+
+        /* Hide scrollbar for marquee container but allow smooth scroll */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            /* IE and Edge */
+            scrollbar-width: none;
+            /* Firefox */
+        }
+
+        /* Marquee drag */
+        #marquee-track {
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        #marquee-track img {
+            pointer-events: none;
+        }
+
+        /* Mobile Menu States */
+        #mobile-menu.is-open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        #mobile-menu.is-open .mobile-nav-link {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Hamburger → X animation */
+        #menu-toggle.is-open .menu-line:nth-child(1) {
+            transform: translateY(8px) rotate(45deg);
+        }
+
+        #menu-toggle.is-open .menu-line:nth-child(2) {
+            opacity: 0;
+            transform: scaleX(0);
+        }
+
+        #menu-toggle.is-open .menu-line:nth-child(3) {
+            transform: translateY(-8px) rotate(-45deg);
+        }
+    </style>
+</head>
+
+<body class="font-sans antialiased relative">
+
+    <!-- Custom Cursor Setup -->
+    <div class="cursor-dot hidden md:block opacity-0 transition-opacity duration-300 pointer-events-none"></div>
+    <div class="cursor-outline hidden md:block opacity-0 transition-opacity duration-300 pointer-events-none"></div>
+
+    <!-- HEADER -->
+    <header id="navbar"
+        class="fixed top-0 w-full z-50 header-transparent px-6 md:px-12 py-6 flex justify-between items-center hover-target text-white transition-all duration-500">
+        <a href="#" class="font-serif text-3xl tracking-wide link-underline relative z-10"
+            style="font-weight: 400;">varo</a>
+
+        <nav class="hidden md:flex gap-12 absolute left-1/2 transform -translate-x-1/2 z-10">
+            <a href="#collections"
+                class="text-xs tracking-[0.15em] uppercase font-light hover:text-brand-gold transition-colors link-underline">Collections</a>
+            <a href="#story"
+                class="text-xs tracking-[0.15em] uppercase font-light hover:text-brand-gold transition-colors link-underline">Story</a>
+            <a href="#shop"
+                class="text-xs tracking-[0.15em] uppercase font-light hover:text-brand-gold transition-colors link-underline">Shop</a>
+        </nav>
+
+        <div class="flex items-center gap-6 relative z-10">
+            <!-- Mobile Menu Toggle -->
+            <button id="menu-toggle" aria-label="Toggle menu" class="md:hidden relative w-6 h-5 flex flex-col justify-between items-end z-[60]">
+                <span class="menu-line w-full h-[1px] bg-current transition-all duration-300 origin-center"></span>
+                <span class="menu-line w-3/4 h-[1px] bg-current transition-all duration-300 origin-center"></span>
+                <span class="menu-line w-full h-[1px] bg-current transition-all duration-300 origin-center"></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- MOBILE NAV OVERLAY -->
+    <div id="mobile-menu" class="fixed inset-0 z-40 bg-brand-charcoal flex flex-col items-center justify-center gap-10 opacity-0 pointer-events-none transition-opacity duration-500 md:hidden">
+        <nav class="flex flex-col items-center gap-10">
+            <a href="#collections" class="mobile-nav-link font-serif text-4xl text-brand-sand tracking-wide opacity-0 translate-y-6 transition-all duration-500">Collections</a>
+            <a href="#story" class="mobile-nav-link font-serif text-4xl text-brand-sand tracking-wide opacity-0 translate-y-6 transition-all duration-500 delay-75">Story</a>
+            <a href="#shop" class="mobile-nav-link font-serif text-4xl text-brand-sand tracking-wide opacity-0 translate-y-6 transition-all duration-500 delay-150">Shop</a>
+        </nav>
+        <div class="flex gap-8 mt-8">
+            <a href="#" class="text-xs tracking-[0.15em] uppercase text-brand-sand/50 hover:text-brand-sand transition-colors">Instagram</a>
+            <a href="#" class="text-xs tracking-[0.15em] uppercase text-brand-sand/50 hover:text-brand-sand transition-colors">Pinterest</a>
+        </div>
+    </div>
+
+    <!-- HERO SECTION -->
+    <section
+        class="relative h-screen min-h-[700px] w-full flex items-center justify-center overflow-hidden bg-brand-charcoal isolation-isolate">
+        <div class="absolute inset-0 z-0 overflow-hidden">
+            <!-- High res cinematic image with parallax effect via script -->
+            <img id="hero-img" src="https://i.imgur.com/9KZY1gq.jpeg" alt="Elegant Hardware"
+                class="w-full h-[120%] object-cover object-center animate-image-reveal opacity-80 mix-blend-luminosity">
+            <div class="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black/30 to-transparent pointer-events-none"></div>
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-brand-charcoal/30"></div>
+        </div>
+
+        <div class="relative z-10 flex flex-col items-center text-center px-6 mt-16 max-w-5xl">
+            <span
+                class="block text-[#F7F5F0]/80 text-xs font-[300] tracking-[0.4em] uppercase mb-8 animate-fade-up">Established
+                in Warsaw</span>
+            <h1
+                class="font-serif text-6xl md:text-8xl lg:text-[9rem] tracking-normal leading-[1.10] text-[#F7F5F0] mb-10 animate-fade-up delay-100">
+                Refined<br>Hardware
+            </h1>
+            <div class="animate-fade-up delay-200">
+                <a href="#collections"
+                    class="btn-outline-white inline-block px-10 py-4 text-xs tracking-[0.15em] uppercase hover-target z-10 relative">Discover
+                    Collection</a>
+            </div>
+        </div>
+
+
+    </section>
+
+    <!-- INTRO / MANIFESTO -->
+    <section id="story" class="bg-brand-sand">
+        <div class="py-24 md:py-40 px-6 md:px-12 xl:px-24 max-w-[1600px] mx-auto flex flex-col md:flex-row items-start gap-16 md:gap-24">
+            <div class="w-full md:w-1/3 revealable px-4">
+                <h2 class="font-serif text-3xl md:text-5xl leading-tight text-brand-charcoal pt-2 border-l-2 border-brand-gold pl-6">
+                    Crafted with <br><span class="italic text-brand-muted">Intention</span>
+                </h2>
+            </div>
+            <div class="w-full md:w-2/3 flex flex-col gap-8 revealable delay-100 px-4">
+                <p class="text-lg md:text-2xl font-light leading-relaxed text-brand-charcoal max-w-3xl">
+                    Every piece begins with a conversation between material and maker. We source stone, brass, and bronze
+                    from trusted suppliers and work with artisans who understand that hardware is not just functional — it
+                    is the first thing you touch when you enter a room.
+                </p>
+                <div class="flex items-center gap-8 mt-4">
+                    <a href="#" class="link-underline text-xs tracking-[0.15em] uppercase font-medium hover-target">Read Our
+                        Story</a>
+                    <div class="h-[1px] w-12 bg-brand-charcoal/20"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MATERIAL FOCUS: STONE -->
+    <section class="h-[70vh] md:h-[85vh] w-full relative overflow-hidden group">
+        <img src="https://zephra.com.au/cdn/shop/files/WhatsApp_Image_2025-06-29_at_14.19.48_f04dcb3d.jpg?v=1751170813&width=4160"
+            alt="Stone Material"
+            class="w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-105">
+        <div class="absolute inset-0"></div>
+
+        <div class="absolute inset-0 flex flex-col justify-center px-6 md:px-12 xl:px-24 text-white max-w-[1600px] mx-auto w-full">
+            <div class="max-w-xl revealable mix-blend-difference px-4">
+                <span class="text-[10px] tracking-[0.2em] uppercase mb-4 block text-white/70">Material Focus</span>
+                <h2 class="font-serif text-4xl md:text-6xl mb-8 italic tracking-wide">Tuscan Stone</h2>
+                <a href="#"
+                    class="btn-outline-white inline-block px-8 py-3 text-xs tracking-[0.1em] uppercase hover-target font-light hover:font-medium transition-all duration-300">Explore
+                    Material</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- INFINITE MARQUEE SCROLL -->
+    <section id="marquee-section" class="py-20 md:py-32 bg-brand-stone overflow-hidden relative border-y border-brand-charcoal/5" style="cursor: grab;">
+        <div
+            class="absolute left-0 top-0 h-full w-32 bg-gradient-to-r from-brand-stone to-transparent z-10 pointer-events-none">
+        </div>
+        <div
+            class="absolute right-0 top-0 h-full w-32 bg-gradient-to-l from-brand-stone to-transparent z-10 pointer-events-none">
+        </div>
+
+        <div id="marquee-track" class="flex gap-6 w-max hover-target">
+            <!-- First Set -->
+            <!-- Wrapper for seamless flex row -->
+            <div class="flex gap-6">
+                <a href="#" class="block w-[200px] md:w-[320px] shrink-0 image-zoom-container hover-target">
+                    <div class="aspect-[4/5] overflow-hidden bg-brand-stone">
+                        <img src="https://i.imgur.com/zqUZFuE.png" alt="Hardware"
+                            class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-100">
+                    </div>
+                </a>
+                <a href="#" class="block w-[200px] md:w-[320px] shrink-0 image-zoom-container hover-target">
+                    <div class="aspect-[4/5] overflow-hidden bg-brand-stone">
+                        <img src="https://i.imgur.com/PBHOmCW.png" alt="Hardware"
+                            class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-100">
+                    </div>
+                </a>
+                <a href="#" class="block w-[200px] md:w-[320px] shrink-0 image-zoom-container hover-target">
+                    <div class="aspect-[4/5] overflow-hidden bg-brand-stone">
+                        <img src="https://i.imgur.com/8qqVR6k.png" alt="Hardware"
+                            class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-100">
+                    </div>
+                </a>
+                <a href="#" class="block w-[200px] md:w-[320px] shrink-0 image-zoom-container hover-target">
+                    <div class="aspect-[4/5] overflow-hidden bg-brand-stone">
+                        <img src="https://i.imgur.com/mGOQanH.png" alt="Hardware"
+                            class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-100">
+                    </div>
+                </a>
+                <a href="#" class="block w-[200px] md:w-[320px] shrink-0 image-zoom-container hover-target">
+                    <div class="aspect-[4/5] overflow-hidden bg-brand-stone">
+                        <img src="https://i.imgur.com/l3UbJJ3.png" alt="Hardware"
+                            class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-100">
+                    </div>
+                </a>
+                <a href="#" class="block w-[200px] md:w-[320px] shrink-0 image-zoom-container hover-target">
+                    <div class="aspect-[4/5] overflow-hidden bg-brand-stone">
+                        <img src="https://i.imgur.com/BarAXAS.png" alt="Hardware"
+                            class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-100">
+                    </div>
+                </a>
+                <a href="#" class="block w-[200px] md:w-[320px] shrink-0 image-zoom-container hover-target">
+                    <div class="aspect-[4/5] overflow-hidden bg-brand-stone">
+                        <img src="https://i.imgur.com/t96XojU.png" alt="Hardware"
+                            class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-100">
+                    </div>
+                </a>
+            </div>
+
+            <!-- Duplicate Set for absolute seamless feeling without jerk -->
+            <div class="flex gap-6">
+                <a href="#" class="block w-[200px] md:w-[320px] shrink-0 image-zoom-container hover-target">
+                    <div class="aspect-[4/5] overflow-hidden bg-brand-stone">
+                        <img src="https://i.imgur.com/zqUZFuE.png" alt="Hardware"
+                            class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-100">
+                    </div>
+                </a>
+                <a href="#" class="block w-[200px] md:w-[320px] shrink-0 image-zoom-container hover-target">
+                    <div class="aspect-[4/5] overflow-hidden bg-brand-stone">
+                        <img src="https://i.imgur.com/PBHOmCW.png" alt="Hardware"
+                            class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-100">
+                    </div>
+                </a>
+                <a href="#" class="block w-[200px] md:w-[320px] shrink-0 image-zoom-container hover-target">
+                    <div class="aspect-[4/5] overflow-hidden bg-brand-stone">
+                        <img src="https://i.imgur.com/8qqVR6k.png" alt="Hardware"
+                            class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-100">
+                    </div>
+                </a>
+                <a href="#" class="block w-[200px] md:w-[320px] shrink-0 image-zoom-container hover-target">
+                    <div class="aspect-[4/5] overflow-hidden bg-brand-stone">
+                        <img src="https://i.imgur.com/mGOQanH.png" alt="Hardware"
+                            class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-100">
+                    </div>
+                </a>
+                <a href="#" class="block w-[200px] md:w-[320px] shrink-0 image-zoom-container hover-target">
+                    <div class="aspect-[4/5] overflow-hidden bg-brand-stone">
+                        <img src="https://i.imgur.com/l3UbJJ3.png" alt="Hardware"
+                            class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-100">
+                    </div>
+                </a>
+                <a href="#" class="block w-[200px] md:w-[320px] shrink-0 image-zoom-container hover-target">
+                    <div class="aspect-[4/5] overflow-hidden bg-brand-stone">
+                        <img src="https://i.imgur.com/BarAXAS.png" alt="Hardware"
+                            class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-100">
+                    </div>
+                </a>
+                <a href="#" class="block w-[200px] md:w-[320px] shrink-0 image-zoom-container hover-target">
+                    <div class="aspect-[4/5] overflow-hidden bg-brand-stone">
+                        <img src="https://i.imgur.com/t96XojU.png" alt="Hardware"
+                            class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-100">
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- CATEGORIES WITH HOVER REVEAL -->
+    <section id="collections" class="py-16 md:py-24 bg-brand-sand">
+        <div class="px-6 md:px-12 xl:px-24 mx-auto max-w-[1600px]">
+            <div
+                class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 md:mb-12 px-4 border-b border-brand-charcoal/10 pb-6">
+                <div>
+                    <span class="block text-[10px] sm:text-xs tracking-[0.2em] uppercase mb-4 text-brand-gold">Curated
+                        Assortment</span>
+                    <h2 class="font-serif text-2xl sm:text-4xl md:text-5xl text-brand-charcoal font-light">Shop by
+                        Category</h2>
+                </div>
+                <a href="#"
+                    class="hidden md:inline-block text-xs tracking-[0.15em] uppercase font-medium hover-target link-underline whitespace-nowrap mb-2">View
+                    All Products &rarr;</a>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-12 px-4">
+                <!-- Category 1 -->
+                <a href="#" class="group block revealable hover-target">
+                    <div class="aspect-square md:aspect-[4/5] bg-[#EBEBEB] overflow-hidden">
+                        <img src="https://i.imgur.com/jWkfDXU.png" alt="Door Handles"
+                            class="w-full h-full object-contain transition-transform duration-700 ease-out group-hover:scale-105">
+                    </div>
+                    <div class="flex justify-between items-center mt-3 md:mt-6">
+                        <h3 class="font-serif text-base md:text-2xl italic text-brand-charcoal">Door Handles</h3>
+                        <span class="text-[10px] md:text-xs text-brand-muted tracking-widest font-light">01</span>
+                    </div>
+                </a>
+
+                <!-- Category 2 -->
+                <a href="#" class="group block revealable delay-100 hover-target">
+                    <div class="aspect-square md:aspect-[4/5] bg-[#EBEBEB] overflow-hidden">
+                        <img src="https://i.imgur.com/pACUYbn.png" alt="Cabinet Pulls"
+                            class="w-full h-full object-contain transition-transform duration-700 ease-out group-hover:scale-105">
+                    </div>
+                    <div class="flex justify-between items-center mt-3 md:mt-6">
+                        <h3 class="font-serif text-base md:text-2xl italic text-brand-charcoal">Cabinet Pulls</h3>
+                        <span class="text-[10px] md:text-xs text-brand-muted tracking-widest font-light">02</span>
+                    </div>
+                </a>
+
+                <!-- Category 3 -->
+                <a href="#" class="group block revealable delay-200 hover-target">
+                    <div class="aspect-square md:aspect-[4/5] bg-[#EBEBEB] overflow-hidden">
+                        <img src="https://i.imgur.com/mGOQanH.png" alt="Cabinet Knobs"
+                            class="w-full h-full object-contain transition-transform duration-700 ease-out group-hover:scale-105">
+                    </div>
+                    <div class="flex justify-between items-center mt-3 md:mt-6">
+                        <h3 class="font-serif text-base md:text-2xl italic text-brand-charcoal">Cabinet Knobs</h3>
+                        <span class="text-[10px] md:text-xs text-brand-muted tracking-widest font-light">03</span>
+                    </div>
+                </a>
+            </div>
+
+            <div class="mt-8 text-center md:hidden">
+                <a href="#"
+                    class="inline-block text-xs tracking-[0.15em] uppercase font-medium hover-target link-underline">View
+                    All
+                    Products &rarr;</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- QUOTE -->
+    <section class="py-24 md:py-36 bg-brand-stone text-center px-6">
+        <div class="max-w-3xl mx-auto revealable">
+            <p class="font-serif text-2xl md:text-4xl italic leading-relaxed text-brand-charcoal mb-8">
+                &ldquo;The smallest details carry the most weight.&rdquo;
+            </p>
+            <span class="text-[10px] sm:text-xs tracking-[0.2em] uppercase text-brand-muted">&mdash; Varo Studio, Warsaw</span>
+        </div>
+    </section>
+
+    <!-- MATERIALS GRID -->
+    <section id="shop" class="py-16 md:py-24 bg-brand-sand">
+        <div class="px-6 md:px-12 xl:px-24 mx-auto max-w-[1600px]">
+            <div
+                class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 md:mb-12 px-4 border-b border-brand-charcoal/10 pb-6">
+                <div>
+                    <span class="block text-[10px] sm:text-xs tracking-[0.2em] uppercase mb-4 text-brand-gold">Core
+                        Elements</span>
+                    <h2 class="font-serif text-2xl sm:text-4xl md:text-5xl text-brand-charcoal font-light">Shop by
+                        Material</h2>
+                </div>
+                <a href="#"
+                    class="hidden md:inline-block text-xs tracking-[0.15em] uppercase font-medium hover-target link-underline whitespace-nowrap mb-2">Explore
+                    All Materials &rarr;</a>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-12 px-4">
+                <!-- Material 1 -->
+                <a href="#" class="group block revealable hover-target">
+                    <div class="aspect-square md:aspect-[4/5] bg-[#EBEBEB] overflow-hidden">
+                        <img src="https://i.imgur.com/zqUZFuE.png" alt="Solid Brass"
+                            class="w-full h-full object-contain transition-transform duration-700 ease-out group-hover:scale-105">
+                    </div>
+                    <div class="flex justify-between items-center mt-3 md:mt-6">
+                        <h3 class="font-serif text-base md:text-2xl italic text-brand-charcoal">Solid Brass</h3>
+                        <span class="text-[10px] md:text-xs text-brand-muted tracking-widest font-light">01</span>
+                    </div>
+                </a>
+
+                <!-- Material 2 -->
+                <a href="#" class="group block revealable delay-100 hover-target">
+                    <div class="aspect-square md:aspect-[4/5] bg-[#EBEBEB] overflow-hidden">
+                        <img src="https://i.imgur.com/PBHOmCW.png" alt="Cast Bronze"
+                            class="w-full h-full object-contain transition-transform duration-700 ease-out group-hover:scale-105">
+                    </div>
+                    <div class="flex justify-between items-center mt-3 md:mt-6">
+                        <h3 class="font-serif text-base md:text-2xl italic text-brand-charcoal">Cast Bronze</h3>
+                        <span class="text-[10px] md:text-xs text-brand-muted tracking-widest font-light">02</span>
+                    </div>
+                </a>
+
+                <!-- Material 3 -->
+                <a href="#" class="group block revealable delay-200 hover-target">
+                    <div class="aspect-square md:aspect-[4/5] bg-[#EBEBEB] overflow-hidden">
+                        <img src="https://i.imgur.com/BarAXAS.png" alt="Natural Stone"
+                            class="w-full h-full object-contain transition-transform duration-700 ease-out group-hover:scale-105">
+                    </div>
+                    <div class="flex justify-between items-center mt-3 md:mt-6">
+                        <h3 class="font-serif text-base md:text-2xl italic text-brand-charcoal">Natural Stone</h3>
+                        <span class="text-[10px] md:text-xs text-brand-muted tracking-widest font-light">03</span>
+                    </div>
+                </a>
+            </div>
+
+            <div class="mt-8 text-center md:hidden">
+                <a href="#"
+                    class="inline-block text-xs tracking-[0.15em] uppercase font-medium hover-target link-underline">Explore
+                    All
+                    Materials &rarr;</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Signature Collection Highlight -->
+    <section id="earlwood" class="relative h-[80vh] md:h-screen w-full overflow-hidden">
+        <!-- Parallax Background Image -->
+        <div class="absolute inset-0">
+            <img src="https://zephra.com.au/cdn/shop/files/CARABEZ-6.jpg?v=1756025274&width=1600"
+                alt="Earlwood Collection" class="w-full h-auto min-h-[100%] object-cover parallax-img origin-top">
+            <div class="absolute inset-0 bg-black/10"></div>
+        </div>
+
+        <!-- Content Overlay -->
+        <div class="absolute inset-0 flex items-center justify-center p-4 sm:p-6 md:p-16 lg:p-24 text-[#F7F5F0]">
+            <div
+                class="revealable relative z-10 w-full md:max-w-4xl bg-[#2A2927] p-8 sm:p-12 md:p-24 shadow-2xl flex flex-col items-start justify-center shadow-black/30">
+
+                <span
+                    class="block text-[10px] sm:text-[11px] font-[400] tracking-[0.3em] uppercase mb-8 text-[#D1C6B7]">The
+                    Signature Series</span>
+                <h2
+                    class="font-serif text-5xl sm:text-7xl md:text-8xl lg:text-[7rem] leading-[1.0] mb-12 tracking-tight font-[400] max-w-full overflow-hidden text-ellipsis text-[#F7F5F0]">
+                    Earlwood
+                </h2>
+                <a href="#"
+                    class="btn-outline-white inline-block px-10 py-4 text-[10px] sm:text-xs tracking-[0.15em] uppercase hover-target">View
+                    Collection</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEWSLETTER FULL WIDTH -->
+    <section class="py-32 md:py-40 bg-brand-stone text-brand-charcoal text-center px-6">
+        <div class="max-w-xl mx-auto revealable">
+            <h2 class="font-serif text-3xl md:text-4xl mb-4 text-brand-charcoal font-light">Stay Connected</h2>
+            <p class="text-brand-muted font-light text-[15px] mb-14 max-w-sm mx-auto">Subscribe for early access to our
+                architectural hardware collections.</p>
+
+            <form
+                class="flex items-center w-full max-w-md mx-auto border-b border-brand-charcoal/20 focus-within:border-brand-charcoal transition-all duration-300 relative group">
+                <input type="email" placeholder="Email Address" required
+                    class="w-full bg-transparent py-5 pl-0 pr-32 text-brand-charcoal placeholder:text-brand-muted/50 focus:outline-none rounded-none text-base hover-target transition-all"
+                    autocomplete="email">
+                <button type="submit"
+                    class="absolute right-0 py-5 px-4 text-[11px] tracking-[0.2em] uppercase text-brand-muted group-focus-within:text-brand-charcoal hover:text-brand-gold transition-colors hover-target font-medium">Subscribe</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- EXPANSIVE FOOTER -->
+    <footer class="bg-brand-charcoal text-brand-sand/70 pt-20 pb-10 px-6 md:px-12 xl:px-24">
+        <div class="max-w-[1600px] mx-auto grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-8 mb-24">
+
+            <!-- Brand & Mission -->
+            <div class="md:col-span-4 flex flex-col justify-between">
+                <div>
+                    <a href="#" class="font-serif text-3xl text-brand-sand block mb-6 hover-target">varo</a>
+                    <p class="text-sm font-light max-w-xs leading-relaxed">
+                        Designing architectural hardware that elevates the tactile dialogue between human and space.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Nav Links Grid -->
+            <div class="md:col-span-8 flex flex-col md:flex-row justify-center gap-16">
+                <div class="flex flex-col gap-4">
+                    <h4 class="text-[10px] tracking-[0.2em] uppercase text-brand-muted font-medium mb-2">Explore</h4>
+                    <a href="#collections"
+                        class="text-sm font-light hover:text-brand-sand transition-colors hover-target link-underline w-fit">Collections</a>
+                    <a href="#story"
+                        class="text-sm font-light hover:text-brand-sand transition-colors hover-target link-underline w-fit">Story</a>
+                    <a href="#shop"
+                        class="text-sm font-light hover:text-brand-sand transition-colors hover-target link-underline w-fit">Shop</a>
+                </div>
+
+                <!-- Socials -->
+                <div class="flex flex-col gap-4">
+                    <h4 class="text-[10px] tracking-[0.2em] uppercase text-brand-muted font-medium mb-2">Connect</h4>
+                    <a href="#"
+                        class="text-sm font-light hover:text-brand-sand transition-colors hover-target link-underline w-fit">Instagram</a>
+                    <a href="#"
+                        class="text-sm font-light hover:text-brand-sand transition-colors hover-target link-underline w-fit">Pinterest</a>
+                    <a href="#"
+                        class="text-sm font-light hover:text-brand-sand transition-colors hover-target link-underline w-fit">LinkedIn</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Bottom -->
+        <div
+            class="max-w-[1600px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4 pt-8 border-t border-brand-sand/10 text-[11px] font-light">
+            <p>&copy; 2026 Varo Studio. All rights reserved.</p>
+            <div class="flex gap-6 text-brand-muted">
+                <a href="#" class="hover:text-brand-sand transition-colors hover-target">Privacy Policy</a>
+                <a href="#" class="hover:text-brand-sand transition-colors hover-target">Terms of Service</a>
+            </div>
+            <p class="text-brand-muted">Designed in Warsaw</p>
+        </div>
+    </footer>
+
+    <script>
+        // Lenis Smooth Scroll Initialization
+        const lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // https://www.desmos.com/calculator/brs54l4xou
+            direction: 'vertical',
+            gestureDirection: 'vertical',
+            smooth: true,
+            mouseMultiplier: 1,
+            smoothTouch: false,
+            touchMultiplier: 2,
+            infinite: false,
+        });
+
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Custom cursor
+            const cursorDot = document.querySelector('.cursor-dot');
+            const cursorOutline = document.querySelector('.cursor-outline');
+
+            if (window.matchMedia("(pointer: fine)").matches && cursorDot && cursorOutline) {
+                document.addEventListener('mousemove', (e) => {
+                    cursorDot.style.left = e.clientX + 'px';
+                    cursorDot.style.top = e.clientY + 'px';
+
+                    cursorOutline.animate({
+                        left: `${e.clientX}px`,
+                        top: `${e.clientY}px`
+                    }, { duration: 300, fill: "forwards" });
+                });
+
+                document.querySelectorAll('.hover-target').forEach(el => {
+                    el.addEventListener('mouseenter', () => {
+                        cursorDot.classList.add('is-hovering');
+                        cursorOutline.classList.add('is-hovering');
+                    });
+                    el.addEventListener('mouseleave', () => {
+                        cursorDot.classList.remove('is-hovering');
+                        cursorOutline.classList.remove('is-hovering');
+                    });
+                });
+            }
+
+            // 2. Intersection Observer for Scroll Reveals
+            const revealOptions = {
+                threshold: 0.1,
+                rootMargin: "0px 0px -50px 0px"
+            };
+
+            const revealOnScroll = new IntersectionObserver(function (entries, observer) {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting) {
+                        return;
+                    } else {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, revealOptions);
+
+            document.querySelectorAll('.revealable').forEach(el => {
+                revealOnScroll.observe(el);
+            });
+
+            // 3. Mobile Menu Toggle
+            const menuToggle = document.getElementById('menu-toggle');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileNavLinks = mobileMenu.querySelectorAll('a');
+
+            menuToggle.addEventListener('click', () => {
+                const isOpen = mobileMenu.classList.toggle('is-open');
+                menuToggle.classList.toggle('is-open');
+                document.body.style.overflow = isOpen ? 'hidden' : '';
+            });
+
+            mobileNavLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.remove('is-open');
+                    menuToggle.classList.remove('is-open');
+                    document.body.style.overflow = '';
+                });
+            });
+
+            // 3b. Marquee — JS-driven auto-scroll + drag (whole section is draggable)
+            const track = document.getElementById('marquee-track');
+            const marqueeSection = document.getElementById('marquee-section');
+            let marqueePos = 0;
+            let marqueeDragging = false;
+            let marqueeStartX = 0;
+            let marqueeDragOffset = 0;
+            const marqueeSpeed = 0.5; // px per frame
+
+            // Half-width = first set of items (track has two identical sets)
+            const getHalfWidth = () => track.scrollWidth / 2;
+
+            // Auto-scroll loop
+            function marqueeLoop() {
+                if (!marqueeDragging) {
+                    marqueePos -= marqueeSpeed;
+                    if (Math.abs(marqueePos) >= getHalfWidth()) {
+                        marqueePos += getHalfWidth();
+                    }
+                }
+                track.style.transform = `translateX(${marqueePos}px)`;
+                requestAnimationFrame(marqueeLoop);
+            }
+            requestAnimationFrame(marqueeLoop);
+
+            // Drag handlers — attached to the whole section
+            const onMarqueeDragStart = (x) => {
+                marqueeDragging = true;
+                marqueeStartX = x;
+                marqueeDragOffset = marqueePos;
+                marqueeSection.style.cursor = 'grabbing';
+            };
+
+            const onMarqueeDragMove = (x) => {
+                if (!marqueeDragging) return;
+                const delta = x - marqueeStartX;
+                marqueePos = marqueeDragOffset + delta;
+            };
+
+            const onMarqueeDragEnd = () => {
+                if (!marqueeDragging) return;
+                marqueeDragging = false;
+                marqueeSection.style.cursor = 'grab';
+                const half = getHalfWidth();
+                while (marqueePos > 0) marqueePos -= half;
+                while (Math.abs(marqueePos) >= half) marqueePos += half;
+            };
+
+            marqueeSection.addEventListener('mousedown', (e) => { e.preventDefault(); onMarqueeDragStart(e.clientX); });
+            window.addEventListener('mousemove', (e) => onMarqueeDragMove(e.clientX));
+            window.addEventListener('mouseup', onMarqueeDragEnd);
+
+            marqueeSection.addEventListener('touchstart', (e) => onMarqueeDragStart(e.touches[0].clientX), { passive: true });
+            marqueeSection.addEventListener('touchmove', (e) => onMarqueeDragMove(e.touches[0].clientX), { passive: true });
+            marqueeSection.addEventListener('touchend', onMarqueeDragEnd);
+
+            // 4. Dynamic Header — mix-blend-difference only outside hero
+            const header = document.getElementById('navbar');
+            const heroSection = document.querySelector('section'); // The first section
+
+            const updateHeaderBlend = () => {
+                const heroBottom = heroSection.offsetTop + heroSection.offsetHeight;
+                if (window.scrollY >= heroBottom - 80) {
+                    header.classList.add('mix-blend-difference');
+                } else {
+                    header.classList.remove('mix-blend-difference');
+                }
+            };
+            window.addEventListener('scroll', updateHeaderBlend);
+            updateHeaderBlend();
+
+            // 5. Parallax Effect logic for specific images
+            const parallaxImages = document.querySelectorAll('.parallax-img');
+            window.addEventListener('scroll', () => {
+                let scrollY = window.pageYOffset;
+                parallaxImages.forEach(img => {
+                    // Adjust Parallax speed
+                    let speed = 0.15;
+                    let offset = Math.max(0, scrollY - img.closest('section').offsetTop);
+                    img.style.transform = `translateY(${offset * speed}px)`;
+                });
+
+                // Specifically for hero image to slightly move up
+                const heroImg = document.getElementById('hero-img');
+                if (heroImg) {
+                    heroImg.style.transform = `translateY(${scrollY * 0.3}px) scale(1.05)`;
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
