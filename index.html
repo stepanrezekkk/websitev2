@@ -38,10 +38,15 @@
                         serif: ['"Playfair Display"', 'serif'],
                     },
                     animation: {
+                        'marquee': 'marquee 40s linear infinite',
                         'fade-up': 'fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards',
                         'image-reveal': 'imageReveal 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards',
                     },
                     keyframes: {
+                        marquee: {
+                            '0%': { transform: 'translateX(0%)' },
+                            '100%': { transform: 'translateX(-50%)' },
+                        },
                         fadeUp: {
                             '0%': { opacity: '0', transform: 'translateY(30px)' },
                             '100%': { opacity: '1', transform: 'translateY(0)' },
@@ -93,6 +98,10 @@
             border-bottom: 1px solid transparent;
             transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
+
+        /* Hide scrollbar for horizontal scroll sections */
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 
         /* Buttons */
         .btn-outline {
@@ -328,15 +337,31 @@
             style="font-weight: 400;">varo</a>
 
         <nav class="hidden md:flex gap-12 absolute left-1/2 transform -translate-x-1/2 z-10">
-            <a href="collections.html"
+            <a href="#collections"
                 class="text-xs tracking-[0.15em] uppercase font-light hover:text-brand-gold transition-colors link-underline">Collections</a>
-            <a href="story.html"
+            <a href="#earlwood"
                 class="text-xs tracking-[0.15em] uppercase font-light hover:text-brand-gold transition-colors link-underline">Story</a>
             <a href="#shop"
                 class="text-xs tracking-[0.15em] uppercase font-light hover:text-brand-gold transition-colors link-underline">Shop</a>
         </nav>
 
-        <div class="flex items-center gap-6 relative z-10">
+        <div class="flex items-center gap-5 relative z-10">
+            <!-- Search Icon -->
+            <a href="#" class="hidden md:block hover-target" aria-label="Search">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+            </a>
+            <!-- Cart Icon -->
+            <a href="#" class="hover-target relative" aria-label="Cart">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <path d="M16 10a4 4 0 0 1-8 0"></path>
+                </svg>
+                <span id="cart-count" class="absolute -top-1.5 -right-1.5 w-4 h-4 bg-brand-gold text-brand-charcoal text-[9px] font-medium rounded-full items-center justify-center hidden">0</span>
+            </a>
             <!-- Mobile Menu Toggle -->
             <button id="menu-toggle" aria-label="Toggle menu" class="md:hidden relative w-6 h-5 flex flex-col justify-between items-end z-[60]">
                 <span class="menu-line w-full h-[1px] bg-current transition-all duration-300 origin-center"></span>
@@ -349,8 +374,8 @@
     <!-- MOBILE NAV OVERLAY -->
     <div id="mobile-menu" class="fixed inset-0 z-40 bg-brand-charcoal flex flex-col items-center justify-center gap-10 opacity-0 pointer-events-none transition-opacity duration-500 md:hidden">
         <nav class="flex flex-col items-center gap-10">
-            <a href="collections.html" class="mobile-nav-link font-serif text-4xl text-brand-sand tracking-wide opacity-0 translate-y-6 transition-all duration-500">Collections</a>
-            <a href="story.html" class="mobile-nav-link font-serif text-4xl text-brand-sand tracking-wide opacity-0 translate-y-6 transition-all duration-500 delay-75">Story</a>
+            <a href="#collections" class="mobile-nav-link font-serif text-4xl text-brand-sand tracking-wide opacity-0 translate-y-6 transition-all duration-500">Collections</a>
+            <a href="#earlwood" class="mobile-nav-link font-serif text-4xl text-brand-sand tracking-wide opacity-0 translate-y-6 transition-all duration-500 delay-75">Story</a>
             <a href="#shop" class="mobile-nav-link font-serif text-4xl text-brand-sand tracking-wide opacity-0 translate-y-6 transition-all duration-500 delay-150">Shop</a>
         </nav>
         <div class="flex gap-8 mt-8">
@@ -361,7 +386,7 @@
 
     <!-- HERO SECTION -->
     <section
-        class="relative h-screen min-h-[700px] w-full flex items-center justify-center overflow-hidden bg-brand-charcoal isolation-isolate">
+        class="relative h-screen w-full flex items-center justify-center overflow-hidden bg-brand-charcoal isolation-isolate">
         <div class="absolute inset-0 z-0 overflow-hidden">
             <!-- High res cinematic image with parallax effect via script -->
             <img id="hero-img" src="https://i.imgur.com/9KZY1gq.jpeg" alt="Elegant Hardware"
@@ -378,164 +403,123 @@
                 class="font-serif text-6xl md:text-8xl lg:text-[9rem] tracking-[0.02em] leading-[1.10] text-[#F7F5F0] mb-10 animate-fade-up delay-100">
                 Refined<br>Hardware
             </h1>
-            <div class="animate-fade-up delay-200">
+            <div class="animate-fade-up delay-200 flex flex-col items-center gap-5">
                 <a href="#collections"
-                    class="btn-outline-white inline-block px-10 py-4 text-xs tracking-[0.2em] uppercase hover-target z-10 relative">Discover
-                    Collection</a>
+                    class="inline-block px-12 py-4 bg-white text-brand-charcoal text-xs tracking-[0.2em] uppercase hover:bg-brand-gold hover:text-brand-charcoal transition-all duration-300 hover-target z-10 relative font-medium">Shop
+                    Now</a>
+                <a href="#featured"
+                    class="text-[#F7F5F0] text-xs sm:text-[12px] tracking-[0.15em] uppercase hover:text-brand-gold transition-colors hover-target z-10 relative font-light border-b border-[#F7F5F0]/40 pb-0.5 hover:border-brand-gold">New Arrivals &rarr;</a>
             </div>
         </div>
 
 
     </section>
 
-    <!-- INTRO / MANIFESTO -->
-    <section id="story" class="bg-brand-sand">
-        <div class="py-24 md:py-40 px-6 md:px-12 xl:px-24 max-w-[1600px] mx-auto flex flex-col md:flex-row items-start gap-16 md:gap-24">
-            <div class="w-full md:w-1/3 revealable px-4">
-                <h2 class="font-serif text-3xl md:text-5xl leading-tight text-brand-charcoal pt-2 border-l-2 border-brand-gold pl-6">
-                    Crafted with <br><span class="italic text-brand-muted">Intention</span>
-                </h2>
+    <!-- TRUST SIGNALS BAR -->
+    <div class="bg-brand-charcoal text-brand-sand/80 py-4 md:py-5 overflow-hidden">
+        <!-- Desktop: static row -->
+        <div class="hidden sm:flex max-w-[1600px] mx-auto px-6 md:px-12 justify-center items-center gap-16 text-[11px] tracking-[0.12em] uppercase font-light">
+            <div class="flex items-center gap-3">
+                <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M8.25 18.75a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 0 1-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h1.125c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H18.75M3.375 14.25h.008M21 12l-4.5-4.5M3 12h13.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span>Free Shipping over &euro;500</span>
             </div>
-            <div class="w-full md:w-2/3 flex flex-col gap-8 revealable delay-100 px-4">
-                <p class="text-lg md:text-2xl font-light leading-relaxed text-brand-charcoal max-w-3xl">
-                    Every piece begins with a conversation between material and maker. We source stone, brass,
-                    and bronze from trusted suppliers and work with artisans who understand that hardware is not just
-                    functional. It is the first thing you touch when you enter a room.
-                </p>
-                <div class="flex items-center gap-8 mt-4">
-                    <a href="story.html" class="link-underline text-xs tracking-[0.15em] uppercase font-medium hover-target">Read Our
-                        Story</a>
-                    <div class="h-[1px] w-12 bg-brand-charcoal/20"></div>
-                </div>
+            <div class="flex items-center gap-3">
+                <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span>30-Day Returns</span>
+            </div>
+            <div class="flex items-center gap-3">
+                <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span>Secure Checkout</span>
             </div>
         </div>
-    </section>
-
-    <!-- MATERIAL FOCUS: STONE -->
-    <section class="h-[70vh] md:h-[85vh] w-full relative overflow-hidden group">
-        <img src="https://zephra.com.au/cdn/shop/files/WhatsApp_Image_2025-06-29_at_14.19.48_f04dcb3d.jpg?v=1751170813&width=4160"
-            alt="Stone Material"
-            class="w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-105">
-        <div class="absolute inset-0"></div>
-
-        <div class="absolute inset-0 flex flex-col justify-center px-6 md:px-12 xl:px-24 text-white max-w-[1600px] mx-auto w-full">
-            <div class="max-w-xl revealable mix-blend-difference px-4">
-                <span class="text-[10px] tracking-[0.2em] uppercase mb-4 block text-white/70 -ml-[0.1em]">Material Focus</span>
-                <h2 class="font-serif text-4xl md:text-6xl mb-8 italic tracking-wide">Tuscan Stone</h2>
-                <a href="#"
-                    class="btn-outline-white inline-block px-8 py-3 text-xs tracking-[0.1em] uppercase hover-target font-light hover:font-medium transition-all duration-300">Explore
-                    Material</a>
+        <!-- Mobile: rotating ticker -->
+        <div class="sm:hidden relative h-5 flex items-center justify-center text-[10px] tracking-[0.12em] uppercase font-light">
+            <div id="trust-ticker" class="absolute inset-0 flex items-center justify-center">
+                <span class="trust-tick opacity-100 transition-opacity duration-500">Free Shipping over &euro;500</span>
+                <span class="trust-tick opacity-0 absolute transition-opacity duration-500">30-Day Returns</span>
+                <span class="trust-tick opacity-0 absolute transition-opacity duration-500">Secure Checkout</span>
             </div>
         </div>
-    </section>
+    </div>
 
     <!-- INFINITE MARQUEE SCROLL -->
-    <section id="marquee-section" class="py-20 md:py-32 bg-brand-stone overflow-hidden relative border-y border-brand-charcoal/5" style="cursor: grab;">
-        <div
-            class="absolute left-0 top-0 h-full w-32 bg-gradient-to-r from-brand-stone to-transparent z-10 pointer-events-none">
-        </div>
-        <div
-            class="absolute right-0 top-0 h-full w-32 bg-gradient-to-l from-brand-stone to-transparent z-10 pointer-events-none">
-        </div>
+    <section class="py-12 md:py-20 bg-brand-stone overflow-hidden relative border-y border-brand-charcoal/5">
+        <div class="absolute left-0 top-0 h-full w-32 bg-gradient-to-r from-brand-stone to-transparent z-10 pointer-events-none"></div>
+        <div class="absolute right-0 top-0 h-full w-32 bg-gradient-to-l from-brand-stone to-transparent z-10 pointer-events-none"></div>
 
-        <div id="marquee-track" class="flex gap-6 w-max hover-target">
+        <div class="flex gap-6 w-max animate-marquee hover:[animation-play-state:paused] hover-target">
             <!-- First Set -->
-            <!-- Wrapper for seamless flex row -->
             <div class="flex gap-6">
-                <a href="#" class="block w-[200px] md:w-[320px] shrink-0 image-zoom-container hover-target">
+                <a href="#" class="block w-[240px] md:w-[320px] shrink-0 image-zoom-container hover-target">
                     <div class="aspect-[4/5] overflow-hidden bg-brand-stone">
-                        <img src="https://i.imgur.com/zqUZFuE.png" alt="Hardware"
-                            class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-100">
+                        <img src="https://i.imgur.com/zqUZFuE.png" alt="Hardware" class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-100">
                     </div>
                 </a>
-                <a href="#" class="block w-[200px] md:w-[320px] shrink-0 image-zoom-container hover-target">
+                <a href="#" class="block w-[240px] md:w-[320px] shrink-0 image-zoom-container hover-target">
                     <div class="aspect-[4/5] overflow-hidden bg-brand-stone">
-                        <img src="https://i.imgur.com/PBHOmCW.png" alt="Hardware"
-                            class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-100">
+                        <img src="https://i.imgur.com/PBHOmCW.png" alt="Hardware" class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-100">
                     </div>
                 </a>
-                <a href="#" class="block w-[200px] md:w-[320px] shrink-0 image-zoom-container hover-target">
+                <a href="#" class="block w-[240px] md:w-[320px] shrink-0 image-zoom-container hover-target">
                     <div class="aspect-[4/5] overflow-hidden bg-brand-stone">
-                        <img src="https://i.imgur.com/8qqVR6k.png" alt="Hardware"
-                            class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-100">
+                        <img src="https://i.imgur.com/8qqVR6k.png" alt="Hardware" class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-100">
                     </div>
                 </a>
-                <a href="#" class="block w-[200px] md:w-[320px] shrink-0 image-zoom-container hover-target">
+                <a href="#" class="block w-[240px] md:w-[320px] shrink-0 image-zoom-container hover-target">
                     <div class="aspect-[4/5] overflow-hidden bg-brand-stone">
-                        <img src="https://i.imgur.com/mGOQanH.png" alt="Hardware"
-                            class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-100">
+                        <img src="https://i.imgur.com/mGOQanH.png" alt="Hardware" class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-100">
                     </div>
                 </a>
-                <a href="#" class="block w-[200px] md:w-[320px] shrink-0 image-zoom-container hover-target">
+                <a href="#" class="block w-[240px] md:w-[320px] shrink-0 image-zoom-container hover-target">
                     <div class="aspect-[4/5] overflow-hidden bg-brand-stone">
-                        <img src="https://i.imgur.com/l3UbJJ3.png" alt="Hardware"
-                            class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-100">
+                        <img src="https://i.imgur.com/l3UbJJ3.png" alt="Hardware" class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-100">
                     </div>
                 </a>
-                <a href="#" class="block w-[200px] md:w-[320px] shrink-0 image-zoom-container hover-target">
+                <a href="#" class="block w-[240px] md:w-[320px] shrink-0 image-zoom-container hover-target">
                     <div class="aspect-[4/5] overflow-hidden bg-brand-stone">
-                        <img src="https://i.imgur.com/BarAXAS.png" alt="Hardware"
-                            class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-100">
-                    </div>
-                </a>
-                <a href="#" class="block w-[200px] md:w-[320px] shrink-0 image-zoom-container hover-target">
-                    <div class="aspect-[4/5] overflow-hidden bg-brand-stone">
-                        <img src="https://i.imgur.com/t96XojU.png" alt="Hardware"
-                            class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-100">
+                        <img src="https://i.imgur.com/t96XojU.png" alt="Hardware" class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-100">
                     </div>
                 </a>
             </div>
 
-            <!-- Duplicate Set for absolute seamless feeling without jerk -->
+            <!-- Duplicate Set for seamless loop -->
             <div class="flex gap-6">
-                <a href="#" class="block w-[200px] md:w-[320px] shrink-0 image-zoom-container hover-target">
+                <a href="#" class="block w-[240px] md:w-[320px] shrink-0 image-zoom-container hover-target">
                     <div class="aspect-[4/5] overflow-hidden bg-brand-stone">
-                        <img src="https://i.imgur.com/zqUZFuE.png" alt="Hardware"
-                            class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-100">
+                        <img src="https://i.imgur.com/zqUZFuE.png" alt="Hardware" class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-100">
                     </div>
                 </a>
-                <a href="#" class="block w-[200px] md:w-[320px] shrink-0 image-zoom-container hover-target">
+                <a href="#" class="block w-[240px] md:w-[320px] shrink-0 image-zoom-container hover-target">
                     <div class="aspect-[4/5] overflow-hidden bg-brand-stone">
-                        <img src="https://i.imgur.com/PBHOmCW.png" alt="Hardware"
-                            class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-100">
+                        <img src="https://i.imgur.com/PBHOmCW.png" alt="Hardware" class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-100">
                     </div>
                 </a>
-                <a href="#" class="block w-[200px] md:w-[320px] shrink-0 image-zoom-container hover-target">
+                <a href="#" class="block w-[240px] md:w-[320px] shrink-0 image-zoom-container hover-target">
                     <div class="aspect-[4/5] overflow-hidden bg-brand-stone">
-                        <img src="https://i.imgur.com/8qqVR6k.png" alt="Hardware"
-                            class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-100">
+                        <img src="https://i.imgur.com/8qqVR6k.png" alt="Hardware" class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-100">
                     </div>
                 </a>
-                <a href="#" class="block w-[200px] md:w-[320px] shrink-0 image-zoom-container hover-target">
+                <a href="#" class="block w-[240px] md:w-[320px] shrink-0 image-zoom-container hover-target">
                     <div class="aspect-[4/5] overflow-hidden bg-brand-stone">
-                        <img src="https://i.imgur.com/mGOQanH.png" alt="Hardware"
-                            class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-100">
+                        <img src="https://i.imgur.com/mGOQanH.png" alt="Hardware" class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-100">
                     </div>
                 </a>
-                <a href="#" class="block w-[200px] md:w-[320px] shrink-0 image-zoom-container hover-target">
+                <a href="#" class="block w-[240px] md:w-[320px] shrink-0 image-zoom-container hover-target">
                     <div class="aspect-[4/5] overflow-hidden bg-brand-stone">
-                        <img src="https://i.imgur.com/l3UbJJ3.png" alt="Hardware"
-                            class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-100">
+                        <img src="https://i.imgur.com/l3UbJJ3.png" alt="Hardware" class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-100">
                     </div>
                 </a>
-                <a href="#" class="block w-[200px] md:w-[320px] shrink-0 image-zoom-container hover-target">
+                <a href="#" class="block w-[240px] md:w-[320px] shrink-0 image-zoom-container hover-target">
                     <div class="aspect-[4/5] overflow-hidden bg-brand-stone">
-                        <img src="https://i.imgur.com/BarAXAS.png" alt="Hardware"
-                            class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-100">
-                    </div>
-                </a>
-                <a href="#" class="block w-[200px] md:w-[320px] shrink-0 image-zoom-container hover-target">
-                    <div class="aspect-[4/5] overflow-hidden bg-brand-stone">
-                        <img src="https://i.imgur.com/t96XojU.png" alt="Hardware"
-                            class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-100">
+                        <img src="https://i.imgur.com/t96XojU.png" alt="Hardware" class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-100">
                     </div>
                 </a>
             </div>
         </div>
     </section>
 
-    <!-- CATEGORIES WITH HOVER REVEAL -->
-    <section id="collections" class="py-16 md:py-24 bg-brand-sand">
+    <!-- SHOP BY CATEGORY -->
+    <section id="collections" class="py-16 md:py-24 bg-brand-stone">
         <div class="px-6 md:px-12 xl:px-24 mx-auto max-w-[1600px]">
             <div
                 class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 md:mb-12 px-4 border-b border-brand-charcoal/10 pb-6">
@@ -550,40 +534,35 @@
                     All Products &rarr;</a>
             </div>
 
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-12 px-4">
-                <!-- Category 1 -->
-                <a href="#" class="group block revealable hover-target">
+            <div id="category-scroll" class="flex gap-4 md:gap-12 px-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide md:overflow-visible md:grid md:grid-cols-3 cursor-grab active:cursor-grabbing">
+                <a href="#" class="group block revealable hover-target min-w-[70vw] sm:min-w-[45vw] md:min-w-0 snap-start">
                     <div class="aspect-square md:aspect-[4/5] bg-[#EBEBEB] overflow-hidden">
                         <img src="https://i.imgur.com/jWkfDXU.png" alt="Door Handles"
                             class="w-full h-full object-contain transition-transform duration-700 ease-out group-hover:scale-105">
                     </div>
                     <div class="flex justify-between items-center mt-3 md:mt-6">
                         <h3 class="font-serif text-base md:text-2xl italic text-brand-charcoal">Door Handles</h3>
-                        <span class="text-[10px] md:text-xs text-brand-muted tracking-widest font-light">01</span>
+                        <span class="text-[10px] md:text-xs text-brand-muted tracking-widest font-light">14 Pieces</span>
                     </div>
                 </a>
-
-                <!-- Category 2 -->
-                <a href="#" class="group block revealable delay-100 hover-target">
+                <a href="#" class="group block revealable delay-100 hover-target min-w-[70vw] sm:min-w-[45vw] md:min-w-0 snap-start">
                     <div class="aspect-square md:aspect-[4/5] bg-[#EBEBEB] overflow-hidden">
                         <img src="https://i.imgur.com/pACUYbn.png" alt="Cabinet Pulls"
                             class="w-full h-full object-contain transition-transform duration-700 ease-out group-hover:scale-105">
                     </div>
                     <div class="flex justify-between items-center mt-3 md:mt-6">
                         <h3 class="font-serif text-base md:text-2xl italic text-brand-charcoal">Cabinet Pulls</h3>
-                        <span class="text-[10px] md:text-xs text-brand-muted tracking-widest font-light">02</span>
+                        <span class="text-[10px] md:text-xs text-brand-muted tracking-widest font-light">9 Pieces</span>
                     </div>
                 </a>
-
-                <!-- Category 3 -->
-                <a href="#" class="group block revealable delay-200 hover-target">
+                <a href="#" class="group block revealable delay-200 hover-target min-w-[70vw] sm:min-w-[45vw] md:min-w-0 snap-start">
                     <div class="aspect-square md:aspect-[4/5] bg-[#EBEBEB] overflow-hidden">
                         <img src="https://i.imgur.com/mGOQanH.png" alt="Cabinet Knobs"
                             class="w-full h-full object-contain transition-transform duration-700 ease-out group-hover:scale-105">
                     </div>
                     <div class="flex justify-between items-center mt-3 md:mt-6">
                         <h3 class="font-serif text-base md:text-2xl italic text-brand-charcoal">Cabinet Knobs</h3>
-                        <span class="text-[10px] md:text-xs text-brand-muted tracking-widest font-light">03</span>
+                        <span class="text-[10px] md:text-xs text-brand-muted tracking-widest font-light">7 Pieces</span>
                     </div>
                 </a>
             </div>
@@ -591,24 +570,13 @@
             <div class="mt-8 text-center md:hidden">
                 <a href="#"
                     class="inline-block text-xs tracking-[0.15em] uppercase font-medium hover-target link-underline">View
-                    All
-                    Products &rarr;</a>
+                    All Products &rarr;</a>
             </div>
         </div>
     </section>
 
-    <!-- QUOTE -->
-    <section class="py-24 md:py-36 bg-brand-stone text-center px-6">
-        <div class="max-w-3xl mx-auto revealable">
-            <p class="font-serif text-2xl md:text-4xl italic leading-relaxed text-brand-charcoal mb-8">
-                &ldquo;The smallest details carry the most weight.&rdquo;
-            </p>
-            <span class="text-[10px] sm:text-xs tracking-[0.2em] uppercase text-brand-muted">&mdash; Varo Studio, Warsaw</span>
-        </div>
-    </section>
-
-    <!-- MATERIALS GRID -->
-    <section id="shop" class="py-16 md:py-24 bg-brand-sand">
+    <!-- SHOP BY MATERIAL -->
+    <section id="shop" class="py-16 md:py-24 bg-brand-sand overflow-hidden">
         <div class="px-6 md:px-12 xl:px-24 mx-auto max-w-[1600px]">
             <div
                 class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 md:mb-12 px-4 border-b border-brand-charcoal/10 pb-6">
@@ -623,40 +591,35 @@
                     All Materials &rarr;</a>
             </div>
 
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-12 px-4">
-                <!-- Material 1 -->
-                <a href="#" class="group block revealable hover-target">
-                    <div class="aspect-square md:aspect-[4/5] bg-[#EBEBEB] overflow-hidden">
+            <div id="material-scroll" class="flex gap-4 md:gap-6 px-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide md:overflow-visible md:grid md:grid-cols-3 cursor-grab active:cursor-grabbing">
+                <a href="#" class="group block revealable hover-target min-w-[75vw] sm:min-w-[45vw] md:min-w-0 snap-start">
+                    <div class="aspect-[3/2] md:aspect-[4/5] bg-[#EBEBEB] overflow-hidden">
                         <img src="https://i.imgur.com/zqUZFuE.png" alt="Solid Brass"
                             class="w-full h-full object-contain transition-transform duration-700 ease-out group-hover:scale-105">
                     </div>
                     <div class="flex justify-between items-center mt-3 md:mt-6">
                         <h3 class="font-serif text-base md:text-2xl italic text-brand-charcoal">Solid Brass</h3>
-                        <span class="text-[10px] md:text-xs text-brand-muted tracking-widest font-light">01</span>
+                        <span class="text-[10px] md:text-xs text-brand-muted tracking-widest font-light">12 Products</span>
                     </div>
                 </a>
-
-                <!-- Material 2 -->
-                <a href="#" class="group block revealable delay-100 hover-target">
-                    <div class="aspect-square md:aspect-[4/5] bg-[#EBEBEB] overflow-hidden">
+                <a href="#" class="group block revealable delay-100 hover-target min-w-[75vw] sm:min-w-[45vw] md:min-w-0 snap-start">
+                    <div class="aspect-[3/2] md:aspect-[4/5] bg-[#EBEBEB] overflow-hidden">
                         <img src="https://i.imgur.com/PBHOmCW.png" alt="Cast Bronze"
                             class="w-full h-full object-contain transition-transform duration-700 ease-out group-hover:scale-105">
                     </div>
                     <div class="flex justify-between items-center mt-3 md:mt-6">
                         <h3 class="font-serif text-base md:text-2xl italic text-brand-charcoal">Cast Bronze</h3>
-                        <span class="text-[10px] md:text-xs text-brand-muted tracking-widest font-light">02</span>
+                        <span class="text-[10px] md:text-xs text-brand-muted tracking-widest font-light">8 Products</span>
                     </div>
                 </a>
-
-                <!-- Material 3 -->
-                <a href="#" class="group block revealable delay-200 hover-target">
-                    <div class="aspect-square md:aspect-[4/5] bg-[#EBEBEB] overflow-hidden">
+                <a href="#" class="group block revealable delay-200 hover-target min-w-[75vw] sm:min-w-[45vw] md:min-w-0 snap-start">
+                    <div class="aspect-[3/2] md:aspect-[4/5] bg-[#EBEBEB] overflow-hidden">
                         <img src="https://i.imgur.com/BarAXAS.png" alt="Natural Stone"
                             class="w-full h-full object-contain transition-transform duration-700 ease-out group-hover:scale-105">
                     </div>
                     <div class="flex justify-between items-center mt-3 md:mt-6">
                         <h3 class="font-serif text-base md:text-2xl italic text-brand-charcoal">Natural Stone</h3>
-                        <span class="text-[10px] md:text-xs text-brand-muted tracking-widest font-light">03</span>
+                        <span class="text-[10px] md:text-xs text-brand-muted tracking-widest font-light">6 Products</span>
                     </div>
                 </a>
             </div>
@@ -664,46 +627,440 @@
             <div class="mt-8 text-center md:hidden">
                 <a href="#"
                     class="inline-block text-xs tracking-[0.15em] uppercase font-medium hover-target link-underline">Explore
-                    All
-                    Materials &rarr;</a>
+                    All Materials &rarr;</a>
             </div>
         </div>
     </section>
 
-    <!-- Signature Collection Highlight -->
-    <section id="earlwood" class="relative h-[80vh] md:h-screen w-full overflow-hidden">
-        <!-- Parallax Background Image -->
+    <!-- FEATURED PRODUCTS -->
+    <section id="featured" class="py-16 md:py-24 bg-brand-stone">
+        <div class="px-6 md:px-12 xl:px-24 mx-auto max-w-[1600px]">
+            <div
+                class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 md:mb-12 px-4 border-b border-brand-charcoal/10 pb-6">
+                <div>
+                    <span class="block text-[10px] sm:text-xs tracking-[0.2em] uppercase mb-4 text-brand-gold -ml-[0.1em]">New
+                        Arrivals</span>
+                    <h2 class="font-serif text-2xl sm:text-4xl md:text-5xl text-brand-charcoal font-light">Featured
+                        Products</h2>
+                    <p class="text-[11px] md:text-[13px] text-brand-muted font-light mt-3 tracking-wide">Handpicked by our design team</p>
+                </div>
+                <a href="#"
+                    class="hidden md:inline-block text-xs tracking-[0.15em] uppercase font-medium hover-target link-underline whitespace-nowrap mb-2">View
+                    All &rarr;</a>
+            </div>
+
+            <div id="featured-scroll" class="flex gap-4 md:gap-8 px-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide cursor-grab active:cursor-grabbing md:grid md:grid-cols-4 md:overflow-visible">
+                <!-- Product 1 — Best Seller -->
+                <div class="group revealable min-w-[42vw] md:min-w-0 shrink-0 md:shrink snap-start">
+                    <a href="#" class="block hover-target">
+                        <div class="aspect-square bg-[#EBEBEB] overflow-hidden relative">
+                            <span class="absolute top-3 left-3 z-10 text-[9px] tracking-[0.15em] uppercase text-brand-charcoal/70 font-medium">Best Seller</span>
+                            <img src="https://i.imgur.com/zqUZFuE.png" alt="Aura Pull — Brass"
+                                class="w-full h-full object-contain transition-transform duration-700 ease-out group-hover:scale-105">
+                        </div>
+                        <div class="mt-3 md:mt-4">
+                            <h3 class="text-sm md:text-base text-brand-charcoal font-light">Aura Pull</h3>
+                            <p class="text-[10px] md:text-xs text-brand-muted tracking-wide mt-0.5">Solid Brass</p>
+                            <p class="text-sm md:text-base text-brand-charcoal mt-1.5 font-light">&euro;280</p>
+                        </div>
+                    </a>
+                    <button onclick="addToCartFeedback(this)" class="add-to-cart mt-3 w-full py-2.5 text-[10px] tracking-[0.15em] uppercase border border-brand-charcoal/20 hover:bg-brand-charcoal hover:text-brand-sand transition-all duration-300 hover-target">Add to Cart</button>
+                </div>
+
+                <!-- Product 2 -->
+                <div class="group revealable delay-100 min-w-[42vw] md:min-w-0 shrink-0 md:shrink snap-start">
+                    <a href="#" class="block hover-target">
+                        <div class="aspect-square bg-[#EBEBEB] overflow-hidden">
+                            <img src="https://i.imgur.com/PBHOmCW.png" alt="Meridian Handle — Bronze"
+                                class="w-full h-full object-contain transition-transform duration-700 ease-out group-hover:scale-105">
+                        </div>
+                        <div class="mt-3 md:mt-4">
+                            <h3 class="text-sm md:text-base text-brand-charcoal font-light">Meridian Handle</h3>
+                            <p class="text-[10px] md:text-xs text-brand-muted tracking-wide mt-0.5">Cast Bronze</p>
+                            <p class="text-sm md:text-base text-brand-charcoal mt-1.5 font-light">&euro;340</p>
+                        </div>
+                    </a>
+                    <button onclick="addToCartFeedback(this)" class="add-to-cart mt-3 w-full py-2.5 text-[10px] tracking-[0.15em] uppercase border border-brand-charcoal/20 hover:bg-brand-charcoal hover:text-brand-sand transition-all duration-300 hover-target">Add to Cart</button>
+                </div>
+
+                <!-- Product 3 -->
+                <div class="group revealable delay-200 min-w-[42vw] md:min-w-0 shrink-0 md:shrink snap-start">
+                    <a href="#" class="block hover-target">
+                        <div class="aspect-square bg-[#EBEBEB] overflow-hidden">
+                            <img src="https://i.imgur.com/8qqVR6k.png" alt="Earlwood Knob — Stone"
+                                class="w-full h-full object-contain transition-transform duration-700 ease-out group-hover:scale-105">
+                        </div>
+                        <div class="mt-3 md:mt-4">
+                            <h3 class="text-sm md:text-base text-brand-charcoal font-light">Earlwood Knob</h3>
+                            <p class="text-[10px] md:text-xs text-brand-muted tracking-wide mt-0.5">Natural Stone</p>
+                            <p class="text-sm md:text-base text-brand-charcoal mt-1.5 font-light">&euro;190</p>
+                        </div>
+                    </a>
+                    <button onclick="addToCartFeedback(this)" class="add-to-cart mt-3 w-full py-2.5 text-[10px] tracking-[0.15em] uppercase border border-brand-charcoal/20 hover:bg-brand-charcoal hover:text-brand-sand transition-all duration-300 hover-target">Add to Cart</button>
+                </div>
+
+                <!-- Product 4 -->
+                <div class="group revealable delay-300 min-w-[42vw] md:min-w-0 shrink-0 md:shrink snap-start">
+                    <a href="#" class="block hover-target">
+                        <div class="aspect-square bg-[#EBEBEB] overflow-hidden">
+                            <img src="https://i.imgur.com/mGOQanH.png" alt="Forma Knob — Brass"
+                                class="w-full h-full object-contain transition-transform duration-700 ease-out group-hover:scale-105">
+                        </div>
+                        <div class="mt-3 md:mt-4">
+                            <h3 class="text-sm md:text-base text-brand-charcoal font-light">Forma Knob</h3>
+                            <p class="text-[10px] md:text-xs text-brand-muted tracking-wide mt-0.5">Solid Brass</p>
+                            <p class="text-sm md:text-base text-brand-charcoal mt-1.5 font-light">&euro;160</p>
+                        </div>
+                    </a>
+                    <button onclick="addToCartFeedback(this)" class="add-to-cart mt-3 w-full py-2.5 text-[10px] tracking-[0.15em] uppercase border border-brand-charcoal/20 hover:bg-brand-charcoal hover:text-brand-sand transition-all duration-300 hover-target">Add to Cart</button>
+                </div>
+
+                <!-- Product 5 — Limited -->
+                <div class="group revealable min-w-[42vw] md:min-w-0 shrink-0 md:shrink snap-start">
+                    <a href="#" class="block hover-target">
+                        <div class="aspect-square bg-[#EBEBEB] overflow-hidden">
+                            <img src="https://i.imgur.com/l3UbJJ3.png" alt="Volta Lever — Bronze"
+                                class="w-full h-full object-contain transition-transform duration-700 ease-out group-hover:scale-105">
+                        </div>
+                        <div class="mt-3 md:mt-4">
+                            <h3 class="text-sm md:text-base text-brand-charcoal font-light">Volta Lever</h3>
+                            <p class="text-[10px] md:text-xs text-brand-muted tracking-wide mt-0.5">Cast Bronze</p>
+                            <p class="text-sm md:text-base text-brand-charcoal mt-1.5 font-light">&euro;420</p>
+
+                        </div>
+                    </a>
+                    <button onclick="addToCartFeedback(this)" class="add-to-cart mt-3 w-full py-2.5 text-[10px] tracking-[0.15em] uppercase border border-brand-charcoal/20 hover:bg-brand-charcoal hover:text-brand-sand transition-all duration-300 hover-target">Add to Cart</button>
+                </div>
+
+                <!-- Product 6 -->
+                <div class="group revealable delay-100 min-w-[42vw] md:min-w-0 shrink-0 md:shrink snap-start">
+                    <a href="#" class="block hover-target">
+                        <div class="aspect-square bg-[#EBEBEB] overflow-hidden">
+                            <img src="https://i.imgur.com/BarAXAS.png" alt="Terra Pull — Stone"
+                                class="w-full h-full object-contain transition-transform duration-700 ease-out group-hover:scale-105">
+                        </div>
+                        <div class="mt-3 md:mt-4">
+                            <h3 class="text-sm md:text-base text-brand-charcoal font-light">Terra Pull</h3>
+                            <p class="text-[10px] md:text-xs text-brand-muted tracking-wide mt-0.5">Natural Stone</p>
+                            <p class="text-sm md:text-base text-brand-charcoal mt-1.5 font-light">&euro;310</p>
+                        </div>
+                    </a>
+                    <button onclick="addToCartFeedback(this)" class="add-to-cart mt-3 w-full py-2.5 text-[10px] tracking-[0.15em] uppercase border border-brand-charcoal/20 hover:bg-brand-charcoal hover:text-brand-sand transition-all duration-300 hover-target">Add to Cart</button>
+                </div>
+
+                <!-- Product 7 -->
+                <div class="group revealable delay-200 min-w-[42vw] md:min-w-0 shrink-0 md:shrink snap-start">
+                    <a href="#" class="block hover-target">
+                        <div class="aspect-square bg-[#EBEBEB] overflow-hidden">
+                            <img src="https://i.imgur.com/t96XojU.png" alt="Cosmo Handle — Brass"
+                                class="w-full h-full object-contain transition-transform duration-700 ease-out group-hover:scale-105">
+                        </div>
+                        <div class="mt-3 md:mt-4">
+                            <h3 class="text-sm md:text-base text-brand-charcoal font-light">Cosmo Handle</h3>
+                            <p class="text-[10px] md:text-xs text-brand-muted tracking-wide mt-0.5">Solid Brass</p>
+                            <p class="text-sm md:text-base text-brand-charcoal mt-1.5 font-light">&euro;360</p>
+                        </div>
+                    </a>
+                    <button onclick="addToCartFeedback(this)" class="add-to-cart mt-3 w-full py-2.5 text-[10px] tracking-[0.15em] uppercase border border-brand-charcoal/20 hover:bg-brand-charcoal hover:text-brand-sand transition-all duration-300 hover-target">Add to Cart</button>
+                </div>
+
+                <!-- Product 8 — New -->
+                <div class="group revealable delay-300 min-w-[42vw] md:min-w-0 shrink-0 md:shrink snap-start">
+                    <a href="#" class="block hover-target">
+                        <div class="aspect-square bg-[#EBEBEB] overflow-hidden relative">
+                            <span class="absolute top-3 left-3 z-10 text-[9px] tracking-[0.15em] uppercase text-brand-gold font-medium">New</span>
+                            <img src="https://i.imgur.com/jWkfDXU.png" alt="Silhouette Lever — Bronze"
+                                class="w-full h-full object-contain transition-transform duration-700 ease-out group-hover:scale-105">
+                        </div>
+                        <div class="mt-3 md:mt-4">
+                            <h3 class="text-sm md:text-base text-brand-charcoal font-light">Silhouette Lever</h3>
+                            <p class="text-[10px] md:text-xs text-brand-muted tracking-wide mt-0.5">Cast Bronze</p>
+                            <p class="text-sm md:text-base text-brand-charcoal mt-1.5 font-light">&euro;480</p>
+                        </div>
+                    </a>
+                    <button onclick="addToCartFeedback(this)" class="add-to-cart mt-3 w-full py-2.5 text-[10px] tracking-[0.15em] uppercase border border-brand-charcoal/20 hover:bg-brand-charcoal hover:text-brand-sand transition-all duration-300 hover-target">Add to Cart</button>
+                </div>
+            </div>
+
+            <div class="mt-10 text-center">
+                <a href="#"
+                    class="inline-block px-10 py-4 text-xs tracking-[0.15em] uppercase hover-target bg-brand-charcoal text-brand-sand hover:bg-brand-gold hover:text-brand-charcoal transition-all duration-300">View
+                    All Products</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- CUSTOMER REVIEWS CAROUSEL -->
+    <section class="py-16 md:py-24 bg-brand-sand overflow-hidden">
+        <div class="px-6 md:px-12 xl:px-24 mx-auto max-w-[1600px]">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 md:mb-12 px-4 border-b border-brand-charcoal/10 pb-6">
+                <div>
+                    <span class="block text-[10px] sm:text-xs tracking-[0.2em] uppercase mb-4 text-brand-gold -ml-[0.1em]">Testimonials</span>
+                    <h2 class="font-serif text-2xl sm:text-4xl md:text-5xl text-brand-charcoal font-light">What Our Clients Say</h2>
+                </div>
+                <div class="flex items-center gap-3 mt-4 md:mt-0 mb-2">
+                    <div class="flex gap-0.5">
+                        <svg class="w-4 h-4 text-brand-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                        <svg class="w-4 h-4 text-brand-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                        <svg class="w-4 h-4 text-brand-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                        <svg class="w-4 h-4 text-brand-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                        <svg class="w-4 h-4 text-brand-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                    </div>
+                    <span class="text-sm text-brand-charcoal font-light">4.9/5 from 127 reviews</span>
+                </div>
+            </div>
+
+            <!-- Carousel container -->
+            <div class="relative px-4 group/carousel">
+                <!-- Carousel arrows (desktop only, visible on hover) -->
+                <button id="review-prev" class="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 items-center justify-center bg-brand-charcoal/5 hover:bg-brand-charcoal/10 rounded-full transition-all duration-300 opacity-0 group-hover/carousel:opacity-100 hover-target">
+                    <svg class="w-4 h-4 text-brand-charcoal" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <button id="review-next" class="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 items-center justify-center bg-brand-charcoal/5 hover:bg-brand-charcoal/10 rounded-full transition-all duration-300 opacity-0 group-hover/carousel:opacity-100 hover-target">
+                    <svg class="w-4 h-4 text-brand-charcoal" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <div id="reviews-carousel" class="overflow-hidden">
+                    <div id="reviews-track" class="flex transition-transform duration-700 ease-in-out">
+
+                        <!-- Review 1 -->
+                        <div class="w-full md:w-1/3 flex-shrink-0 px-3 md:px-5">
+                            <div class="flex flex-col justify-between h-full">
+                                <div>
+                                    <div class="flex gap-1 mb-5">
+                                        <svg class="w-3.5 h-3.5 text-brand-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                        <svg class="w-3.5 h-3.5 text-brand-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                        <svg class="w-3.5 h-3.5 text-brand-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                        <svg class="w-3.5 h-3.5 text-brand-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                        <svg class="w-3.5 h-3.5 text-brand-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                    </div>
+                                    <p class="font-serif text-lg md:text-xl italic leading-relaxed text-brand-charcoal mb-6">&ldquo;The Aura Pull transformed our entire kitchen. The weight, the finish &mdash; you can feel the craftsmanship the moment you touch it.&rdquo;</p>
+                                </div>
+                                <div class="flex items-center gap-4 pt-6 border-t border-brand-charcoal/10">
+                                    <div>
+                                        <p class="text-sm text-brand-charcoal font-light">Katarzyna M.</p>
+                                        <p class="text-[10px] text-brand-muted tracking-wide uppercase mt-0.5">Interior Designer, Krak&oacute;w</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Review 2 -->
+                        <div class="w-full md:w-1/3 flex-shrink-0 px-3 md:px-5">
+                            <div class="flex flex-col justify-between h-full">
+                                <div>
+                                    <div class="flex gap-1 mb-5">
+                                        <svg class="w-3.5 h-3.5 text-brand-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                        <svg class="w-3.5 h-3.5 text-brand-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                        <svg class="w-3.5 h-3.5 text-brand-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                        <svg class="w-3.5 h-3.5 text-brand-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                        <svg class="w-3.5 h-3.5 text-brand-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                    </div>
+                                    <p class="font-serif text-lg md:text-xl italic leading-relaxed text-brand-charcoal mb-6">&ldquo;We specified Varo hardware across an entire residential project. The stone knobs are absolutely stunning &mdash; clients couldn&rsquo;t stop talking about them.&rdquo;</p>
+                                </div>
+                                <div class="flex items-center gap-4 pt-6 border-t border-brand-charcoal/10">
+                                    <div>
+                                        <p class="text-sm text-brand-charcoal font-light">Thomas &amp; Hale Studio</p>
+                                        <p class="text-[10px] text-brand-muted tracking-wide uppercase mt-0.5">Architecture Firm, London</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Review 3 -->
+                        <div class="w-full md:w-1/3 flex-shrink-0 px-3 md:px-5">
+                            <div class="flex flex-col justify-between h-full">
+                                <div>
+                                    <div class="flex gap-1 mb-5">
+                                        <svg class="w-3.5 h-3.5 text-brand-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                        <svg class="w-3.5 h-3.5 text-brand-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                        <svg class="w-3.5 h-3.5 text-brand-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                        <svg class="w-3.5 h-3.5 text-brand-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                        <svg class="w-3.5 h-3.5 text-brand-charcoal/20" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                    </div>
+                                    <p class="font-serif text-lg md:text-xl italic leading-relaxed text-brand-charcoal mb-6">&ldquo;Beautifully packaged, incredibly solid. The bronze lever has this warmth to it that photos don&rsquo;t capture. Shipping took a bit longer than expected, but worth the wait.&rdquo;</p>
+                                </div>
+                                <div class="flex items-center gap-4 pt-6 border-t border-brand-charcoal/10">
+                                    <div>
+                                        <p class="text-sm text-brand-charcoal font-light">Marcus V.</p>
+                                        <p class="text-[10px] text-brand-muted tracking-wide uppercase mt-0.5">Homeowner, Berlin</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Review 4 -->
+                        <div class="w-full md:w-1/3 flex-shrink-0 px-3 md:px-5">
+                            <div class="flex flex-col justify-between h-full">
+                                <div>
+                                    <div class="flex gap-1 mb-5">
+                                        <svg class="w-3.5 h-3.5 text-brand-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                        <svg class="w-3.5 h-3.5 text-brand-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                        <svg class="w-3.5 h-3.5 text-brand-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                        <svg class="w-3.5 h-3.5 text-brand-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                        <svg class="w-3.5 h-3.5 text-brand-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                    </div>
+                                    <p class="font-serif text-lg md:text-xl italic leading-relaxed text-brand-charcoal mb-6">&ldquo;Every detail matters in a luxury renovation. The Volta Lever in bronze became the defining detail of our hallway &mdash; guests always notice it first.&rdquo;</p>
+                                </div>
+                                <div class="flex items-center gap-4 pt-6 border-t border-brand-charcoal/10">
+                                    <div>
+                                        <p class="text-sm text-brand-charcoal font-light">Aleksander P.</p>
+                                        <p class="text-[10px] text-brand-muted tracking-wide uppercase mt-0.5">Architect, Warsaw</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Review 5 -->
+                        <div class="w-full md:w-1/3 flex-shrink-0 px-3 md:px-5">
+                            <div class="flex flex-col justify-between h-full">
+                                <div>
+                                    <div class="flex gap-1 mb-5">
+                                        <svg class="w-3.5 h-3.5 text-brand-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                        <svg class="w-3.5 h-3.5 text-brand-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                        <svg class="w-3.5 h-3.5 text-brand-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                        <svg class="w-3.5 h-3.5 text-brand-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                        <svg class="w-3.5 h-3.5 text-brand-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                    </div>
+                                    <p class="font-serif text-lg md:text-xl italic leading-relaxed text-brand-charcoal mb-6">&ldquo;I spent months searching for hardware that matched the tone of our home. Varo understood the assignment. Subtle, refined, and unmistakably quality.&rdquo;</p>
+                                </div>
+                                <div class="flex items-center gap-4 pt-6 border-t border-brand-charcoal/10">
+                                    <div>
+                                        <p class="text-sm text-brand-charcoal font-light">Sophie L.</p>
+                                        <p class="text-[10px] text-brand-muted tracking-wide uppercase mt-0.5">Homeowner, Paris</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Review 6 -->
+                        <div class="w-full md:w-1/3 flex-shrink-0 px-3 md:px-5">
+                            <div class="flex flex-col justify-between h-full">
+                                <div>
+                                    <div class="flex gap-1 mb-5">
+                                        <svg class="w-3.5 h-3.5 text-brand-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                        <svg class="w-3.5 h-3.5 text-brand-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                        <svg class="w-3.5 h-3.5 text-brand-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                        <svg class="w-3.5 h-3.5 text-brand-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                        <svg class="w-3.5 h-3.5 text-brand-charcoal/20" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                    </div>
+                                    <p class="font-serif text-lg md:text-xl italic leading-relaxed text-brand-charcoal mb-6">&ldquo;Ordered the Earlwood set for a client&rsquo;s bathroom renovation. The natural stone pieces have this incredible tactile quality. Each one feels like a small sculpture.&rdquo;</p>
+                                </div>
+                                <div class="flex items-center gap-4 pt-6 border-t border-brand-charcoal/10">
+                                    <div>
+                                        <p class="text-sm text-brand-charcoal font-light">Elena R.</p>
+                                        <p class="text-[10px] text-brand-muted tracking-wide uppercase mt-0.5">Interior Designer, Milan</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Review 7 -->
+                        <div class="w-full md:w-1/3 flex-shrink-0 px-3 md:px-5">
+                            <div class="flex flex-col justify-between h-full">
+                                <div>
+                                    <div class="flex gap-1 mb-5">
+                                        <svg class="w-3.5 h-3.5 text-brand-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                        <svg class="w-3.5 h-3.5 text-brand-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                        <svg class="w-3.5 h-3.5 text-brand-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                        <svg class="w-3.5 h-3.5 text-brand-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                        <svg class="w-3.5 h-3.5 text-brand-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                    </div>
+                                    <p class="font-serif text-lg md:text-xl italic leading-relaxed text-brand-charcoal mb-6">&ldquo;We furnished three show apartments with Varo hardware. The consistency across every piece is remarkable &mdash; same weight, same finish, zero variation.&rdquo;</p>
+                                </div>
+                                <div class="flex items-center gap-4 pt-6 border-t border-brand-charcoal/10">
+                                    <div>
+                                        <p class="text-sm text-brand-charcoal font-light">Nordic Spaces Studio</p>
+                                        <p class="text-[10px] text-brand-muted tracking-wide uppercase mt-0.5">Design Studio, Copenhagen</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Review 8 -->
+                        <div class="w-full md:w-1/3 flex-shrink-0 px-3 md:px-5">
+                            <div class="flex flex-col justify-between h-full">
+                                <div>
+                                    <div class="flex gap-1 mb-5">
+                                        <svg class="w-3.5 h-3.5 text-brand-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                        <svg class="w-3.5 h-3.5 text-brand-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                        <svg class="w-3.5 h-3.5 text-brand-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                        <svg class="w-3.5 h-3.5 text-brand-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                        <svg class="w-3.5 h-3.5 text-brand-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                    </div>
+                                    <p class="font-serif text-lg md:text-xl italic leading-relaxed text-brand-charcoal mb-6">&ldquo;Replaced all the hardware in our 1920s townhouse with Varo brass pieces. They have that timeless quality &mdash; modern enough to feel fresh, classic enough to belong.&rdquo;</p>
+                                </div>
+                                <div class="flex items-center gap-4 pt-6 border-t border-brand-charcoal/10">
+                                    <div>
+                                        <p class="text-sm text-brand-charcoal font-light">James &amp; Olivia W.</p>
+                                        <p class="text-[10px] text-brand-muted tracking-wide uppercase mt-0.5">Homeowners, Amsterdam</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Review 9 -->
+                        <div class="w-full md:w-1/3 flex-shrink-0 px-3 md:px-5">
+                            <div class="flex flex-col justify-between h-full">
+                                <div>
+                                    <div class="flex gap-1 mb-5">
+                                        <svg class="w-3.5 h-3.5 text-brand-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                        <svg class="w-3.5 h-3.5 text-brand-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                        <svg class="w-3.5 h-3.5 text-brand-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                        <svg class="w-3.5 h-3.5 text-brand-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                        <svg class="w-3.5 h-3.5 text-brand-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                    </div>
+                                    <p class="font-serif text-lg md:text-xl italic leading-relaxed text-brand-charcoal mb-6">&ldquo;As a developer working on boutique hotels, I need hardware that photographs beautifully and performs daily. Varo delivers on both. Our go-to for every project now.&rdquo;</p>
+                                </div>
+                                <div class="flex items-center gap-4 pt-6 border-t border-brand-charcoal/10">
+                                    <div>
+                                        <p class="text-sm text-brand-charcoal font-light">David Chen</p>
+                                        <p class="text-[10px] text-brand-muted tracking-wide uppercase mt-0.5">Property Developer, Z&uuml;rich</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- SIGNATURE COLLECTION: EARLWOOD -->
+    <section id="earlwood" class="relative h-[70vh] md:h-[70vh] w-full overflow-hidden">
         <div class="absolute inset-0">
             <img src="https://zephra.com.au/cdn/shop/files/CARABEZ-6.jpg?v=1756025274&width=1600"
                 alt="Earlwood Collection" class="w-full h-auto min-h-[100%] object-cover parallax-img origin-top">
-            <div class="absolute inset-0 bg-black/10"></div>
+            <div class="absolute inset-0 bg-black/10 md:bg-black/10 max-md:bg-black/25"></div>
         </div>
-
-        <!-- Content Overlay -->
         <div class="absolute inset-0 flex items-center justify-center p-4 sm:p-6 md:p-16 lg:p-24 text-[#F7F5F0]">
             <div
-                class="revealable relative z-10 w-full md:max-w-4xl bg-[#2A2927] p-8 sm:p-12 md:p-24 shadow-2xl flex flex-col items-start justify-center shadow-black/30">
-
+                class="revealable relative z-10 w-full md:max-w-4xl bg-[#2A2927] p-8 sm:p-12 md:p-20 shadow-2xl flex flex-col items-start justify-center shadow-black/30">
                 <span
-                    class="block text-[10px] sm:text-[11px] font-[400] tracking-[0.3em] uppercase mb-8 text-[#D1C6B7]">The
+                    class="block text-[10px] sm:text-[11px] font-[400] tracking-[0.3em] uppercase mb-6 text-[#D1C6B7]">The
                     Signature Series</span>
                 <h2
-                    class="font-serif text-5xl sm:text-7xl md:text-8xl lg:text-[7rem] leading-[1.0] mb-12 tracking-tight font-[400] max-w-full overflow-hidden text-ellipsis text-[#F7F5F0]">
+                    class="font-serif text-5xl sm:text-7xl md:text-8xl leading-[1.0] mb-4 tracking-tight font-[400] max-w-full overflow-hidden text-ellipsis text-[#F7F5F0]">
                     Earlwood
                 </h2>
-                <a href="#"
-                    class="btn-outline-white inline-block px-10 py-4 text-[10px] sm:text-xs tracking-[0.15em] uppercase hover-target">View
-                    Collection</a>
+                <p class="text-[13px] md:text-sm text-[#D1C6B7] font-light leading-relaxed mb-8 max-w-md">12 pieces shaped from natural stone and bronze. Designed for spaces that speak quietly.</p>
+                <div class="flex flex-col items-start gap-2">
+                    <a href="#"
+                        class="btn-outline-white inline-block px-10 py-4 text-[10px] sm:text-xs tracking-[0.15em] uppercase hover-target">Explore the Collection</a>
+                    <span class="text-[10px] text-[#D1C6B7]/60 tracking-[0.1em] uppercase font-light ml-1">From &euro;190</span>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- NEWSLETTER FULL WIDTH -->
-    <section class="py-32 md:py-40 bg-brand-stone text-brand-charcoal text-center px-6">
+    <!-- NEWSLETTER -->
+    <section class="py-20 md:py-28 bg-brand-stone text-brand-charcoal text-center px-6">
         <div class="max-w-xl mx-auto revealable">
             <h2 class="font-serif text-3xl md:text-4xl mb-4 text-brand-charcoal font-light">Stay Connected</h2>
-            <p class="text-brand-muted font-light text-[15px] mb-14 max-w-sm mx-auto">Subscribe for early access to our
-                architectural hardware collections.</p>
+            <p class="text-brand-muted font-light text-[15px] mb-3 max-w-sm mx-auto">Subscribe for early access to new
+                products and exclusive offers.</p>
+            <p class="text-brand-gold text-sm font-medium mb-8 tracking-wide">Get 10% off your first order</p>
 
             <form
                 class="flex items-center w-full max-w-md mx-auto border-b border-brand-charcoal/20 focus-within:border-brand-charcoal transition-all duration-300 relative group">
@@ -717,8 +1074,8 @@
     </section>
 
     <!-- EXPANSIVE FOOTER -->
-    <footer class="bg-brand-charcoal text-brand-sand/70 pt-20 pb-10 px-6 md:px-12 xl:px-24">
-        <div class="max-w-[1600px] mx-auto grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-8 mb-24">
+    <footer class="bg-brand-charcoal text-brand-sand/70 pt-16 pb-8 px-6 md:px-12 xl:px-24">
+        <div class="max-w-[1600px] mx-auto grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-8 mb-16">
 
             <!-- Brand & Mission -->
             <div class="md:col-span-4 flex flex-col justify-between">
@@ -733,16 +1090,27 @@
             <!-- Nav Links Grid -->
             <div class="md:col-span-8 flex flex-col md:flex-row justify-center gap-16">
                 <div class="flex flex-col gap-4">
-                    <h4 class="text-[10px] tracking-[0.2em] uppercase text-brand-muted font-medium mb-2">Explore</h4>
-                    <a href="collections.html"
-                        class="text-sm font-light hover:text-brand-sand transition-colors hover-target link-underline w-fit">Collections</a>
-                    <a href="story.html"
-                        class="text-sm font-light hover:text-brand-sand transition-colors hover-target link-underline w-fit">Story</a>
-                    <a href="#shop"
-                        class="text-sm font-light hover:text-brand-sand transition-colors hover-target link-underline w-fit">Shop</a>
+                    <h4 class="text-[10px] tracking-[0.2em] uppercase text-brand-muted font-medium mb-2">Shop</h4>
+                    <a href="#"
+                        class="text-sm font-light hover:text-brand-sand transition-colors hover-target link-underline w-fit">All Products</a>
+                    <a href="#"
+                        class="text-sm font-light hover:text-brand-sand transition-colors hover-target link-underline w-fit">Door Handles</a>
+                    <a href="#"
+                        class="text-sm font-light hover:text-brand-sand transition-colors hover-target link-underline w-fit">Cabinet Pulls</a>
+                    <a href="#"
+                        class="text-sm font-light hover:text-brand-sand transition-colors hover-target link-underline w-fit">Cabinet Knobs</a>
                 </div>
 
-                <!-- Socials -->
+                <div class="flex flex-col gap-4">
+                    <h4 class="text-[10px] tracking-[0.2em] uppercase text-brand-muted font-medium mb-2">Explore</h4>
+                    <a href="#collections"
+                        class="text-sm font-light hover:text-brand-sand transition-colors hover-target link-underline w-fit">Collections</a>
+                    <a href="#earlwood"
+                        class="text-sm font-light hover:text-brand-sand transition-colors hover-target link-underline w-fit">Story</a>
+                    <a href="#shop"
+                        class="text-sm font-light hover:text-brand-sand transition-colors hover-target link-underline w-fit">Materials</a>
+                </div>
+
                 <div class="flex flex-col gap-4">
                     <h4 class="text-[10px] tracking-[0.2em] uppercase text-brand-muted font-medium mb-2">Connect</h4>
                     <a href="#"
@@ -755,9 +1123,17 @@
             </div>
         </div>
 
+        <!-- Payment Methods -->
+        <div class="max-w-[1600px] mx-auto flex justify-center items-center gap-6 pt-8 border-t border-brand-sand/10 pb-8">
+            <svg class="h-6 w-auto text-brand-sand/30" viewBox="0 0 50 32" fill="currentColor"><rect width="50" height="32" rx="4"/><text x="25" y="20" fill="#111" font-size="10" font-family="sans-serif" text-anchor="middle" font-weight="600">VISA</text></svg>
+            <svg class="h-6 w-auto text-brand-sand/30" viewBox="0 0 50 32" fill="currentColor"><rect width="50" height="32" rx="4"/><text x="25" y="20" fill="#111" font-size="7" font-family="sans-serif" text-anchor="middle" font-weight="600">Mastercard</text></svg>
+            <svg class="h-6 w-auto text-brand-sand/30" viewBox="0 0 50 32" fill="currentColor"><rect width="50" height="32" rx="4"/><text x="25" y="20" fill="#111" font-size="7" font-family="sans-serif" text-anchor="middle" font-weight="600">Apple Pay</text></svg>
+            <svg class="h-6 w-auto text-brand-sand/30" viewBox="0 0 50 32" fill="currentColor"><rect width="50" height="32" rx="4"/><text x="25" y="20" fill="#111" font-size="8" font-family="sans-serif" text-anchor="middle" font-weight="600">PayPal</text></svg>
+        </div>
+
         <!-- Footer Bottom -->
         <div
-            class="max-w-[1600px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4 pt-8 border-t border-brand-sand/10 text-[11px] font-light">
+            class="max-w-[1600px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4 pt-6 border-t border-brand-sand/10 text-[11px] font-light">
             <p>&copy; 2026 Varo Studio. All rights reserved.</p>
             <div class="flex gap-6 text-brand-muted">
                 <a href="#" class="hover:text-brand-sand transition-colors hover-target">Privacy Policy</a>
@@ -766,6 +1142,21 @@
             <p class="text-brand-muted">Designed in Warsaw</p>
         </div>
     </footer>
+
+    <!-- MOBILE STICKY ADD TO CART BAR -->
+    <div id="mobile-sticky-cart" class="fixed bottom-0 left-0 right-0 z-40 md:hidden bg-brand-charcoal/95 backdrop-blur-sm text-brand-sand px-5 py-3.5 flex items-center justify-between translate-y-full transition-transform duration-300">
+        <div>
+            <p id="sticky-product-name" class="text-sm font-light">Aura Pull</p>
+            <p id="sticky-product-price" class="text-xs text-brand-sand/60 font-light">&euro;280</p>
+        </div>
+        <button onclick="addToCartFeedback(this)" class="add-to-cart px-6 py-2.5 text-[10px] tracking-[0.15em] uppercase bg-brand-sand text-brand-charcoal hover:bg-brand-gold transition-all duration-300 font-medium">Add to Cart</button>
+    </div>
+
+    <!-- BACK TO TOP BUTTON -->
+    <button id="back-to-top" aria-label="Back to top"
+        class="fixed bottom-6 right-6 z-50 w-11 h-11 bg-brand-charcoal text-brand-sand rounded-full flex items-center justify-center opacity-0 pointer-events-none translate-y-4 transition-all duration-300 hover:bg-brand-gold hover:text-brand-charcoal shadow-lg hover-target">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>
+    </button>
 
     <script>
         // Lenis Smooth Scroll Initialization
@@ -786,6 +1177,20 @@
             requestAnimationFrame(raf);
         }
         requestAnimationFrame(raf);
+
+        // Add to Cart feedback
+        function addToCartFeedback(btn) {
+            if (btn.disabled) return;
+            const original = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = 'Added \u2713';
+            btn.classList.add('bg-brand-charcoal', 'text-brand-sand', 'border-brand-charcoal');
+            setTimeout(() => {
+                btn.textContent = original;
+                btn.disabled = false;
+                btn.classList.remove('bg-brand-charcoal', 'text-brand-sand', 'border-brand-charcoal');
+            }, 1800);
+        }
 
         document.addEventListener('DOMContentLoaded', () => {
             // 1. Custom cursor
@@ -855,62 +1260,6 @@
                 });
             });
 
-            // 3b. Marquee — JS-driven auto-scroll + drag (whole section is draggable)
-            const track = document.getElementById('marquee-track');
-            const marqueeSection = document.getElementById('marquee-section');
-            let marqueePos = 0;
-            let marqueeDragging = false;
-            let marqueeStartX = 0;
-            let marqueeDragOffset = 0;
-            const marqueeSpeed = 0.5; // px per frame
-
-            // Half-width = first set of items (track has two identical sets)
-            const getHalfWidth = () => track.scrollWidth / 2;
-
-            // Auto-scroll loop
-            function marqueeLoop() {
-                if (!marqueeDragging) {
-                    marqueePos -= marqueeSpeed;
-                    if (Math.abs(marqueePos) >= getHalfWidth()) {
-                        marqueePos += getHalfWidth();
-                    }
-                }
-                track.style.transform = `translateX(${marqueePos}px)`;
-                requestAnimationFrame(marqueeLoop);
-            }
-            requestAnimationFrame(marqueeLoop);
-
-            // Drag handlers — attached to the whole section
-            const onMarqueeDragStart = (x) => {
-                marqueeDragging = true;
-                marqueeStartX = x;
-                marqueeDragOffset = marqueePos;
-                marqueeSection.style.cursor = 'grabbing';
-            };
-
-            const onMarqueeDragMove = (x) => {
-                if (!marqueeDragging) return;
-                const delta = x - marqueeStartX;
-                marqueePos = marqueeDragOffset + delta;
-            };
-
-            const onMarqueeDragEnd = () => {
-                if (!marqueeDragging) return;
-                marqueeDragging = false;
-                marqueeSection.style.cursor = 'grab';
-                const half = getHalfWidth();
-                while (marqueePos > 0) marqueePos -= half;
-                while (Math.abs(marqueePos) >= half) marqueePos += half;
-            };
-
-            marqueeSection.addEventListener('mousedown', (e) => { e.preventDefault(); onMarqueeDragStart(e.clientX); });
-            window.addEventListener('mousemove', (e) => onMarqueeDragMove(e.clientX));
-            window.addEventListener('mouseup', onMarqueeDragEnd);
-
-            marqueeSection.addEventListener('touchstart', (e) => onMarqueeDragStart(e.touches[0].clientX), { passive: true });
-            marqueeSection.addEventListener('touchmove', (e) => onMarqueeDragMove(e.touches[0].clientX), { passive: true });
-            marqueeSection.addEventListener('touchend', onMarqueeDragEnd);
-
             // 4. Dynamic Header — mix-blend-difference only outside hero
             const header = document.getElementById('navbar');
             const heroSection = document.querySelector('section'); // The first section
@@ -926,7 +1275,186 @@
             window.addEventListener('scroll', updateHeaderBlend);
             updateHeaderBlend();
 
-            // 5. Parallax Effect logic for specific images
+            // 5. Drag-to-scroll for Category, Material, and Featured
+            ['category-scroll', 'material-scroll', 'featured-scroll'].forEach(id => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                let isDown = false, startX, scrollL;
+                el.addEventListener('mousedown', (e) => {
+                    isDown = true;
+                    startX = e.pageX - el.offsetLeft;
+                    scrollL = el.scrollLeft;
+                    e.preventDefault();
+                });
+                el.addEventListener('mouseleave', () => { isDown = false; });
+                el.addEventListener('mouseup', () => { isDown = false; });
+                el.addEventListener('mousemove', (e) => {
+                    if (!isDown) return;
+                    e.preventDefault();
+                    const x = e.pageX - el.offsetLeft;
+                    el.scrollLeft = scrollL - (x - startX) * 1.5;
+                });
+            });
+
+            // 6. Marquee drag-to-browse
+            const marqueeEl = document.querySelector('.animate-marquee');
+            if (marqueeEl) {
+                let mDragging = false;
+                let mStartX = 0;
+                let mTranslate = 0;
+
+                marqueeEl.style.cursor = 'grab';
+
+                marqueeEl.addEventListener('mousedown', (e) => {
+                    mDragging = true;
+                    mStartX = e.clientX;
+                    const cs = getComputedStyle(marqueeEl);
+                    const matrix = new DOMMatrix(cs.transform);
+                    mTranslate = matrix.m41;
+                    marqueeEl.style.animationPlayState = 'paused';
+                    marqueeEl.style.cursor = 'grabbing';
+                    e.preventDefault();
+                });
+
+                window.addEventListener('mousemove', (e) => {
+                    if (!mDragging) return;
+                    const dx = e.clientX - mStartX;
+                    marqueeEl.style.animation = 'none';
+                    marqueeEl.style.transform = 'translateX(' + (mTranslate + dx) + 'px)';
+                });
+
+                window.addEventListener('mouseup', () => {
+                    if (!mDragging) return;
+                    mDragging = false;
+                    marqueeEl.style.cursor = 'grab';
+                    marqueeEl.style.animation = '';
+                    marqueeEl.style.transform = '';
+                });
+
+                marqueeEl.addEventListener('touchstart', (e) => {
+                    mDragging = true;
+                    mStartX = e.touches[0].clientX;
+                    const cs = getComputedStyle(marqueeEl);
+                    const matrix = new DOMMatrix(cs.transform);
+                    mTranslate = matrix.m41;
+                    marqueeEl.style.animationPlayState = 'paused';
+                }, { passive: true });
+
+                window.addEventListener('touchmove', (e) => {
+                    if (!mDragging) return;
+                    const dx = e.touches[0].clientX - mStartX;
+                    marqueeEl.style.animation = 'none';
+                    marqueeEl.style.transform = 'translateX(' + (mTranslate + dx) + 'px)';
+                }, { passive: true });
+
+                window.addEventListener('touchend', () => {
+                    if (!mDragging) return;
+                    mDragging = false;
+                    marqueeEl.style.animation = '';
+                    marqueeEl.style.transform = '';
+                });
+            }
+
+            // 6. Reviews Carousel
+            const reviewsTrack = document.getElementById('reviews-track');
+            if (reviewsTrack) {
+                const slides = reviewsTrack.children;
+                const totalSlides = slides.length;
+                let currentPage = 0;
+                let perPage = window.innerWidth >= 768 ? 3 : 1;
+                let totalPages = Math.ceil(totalSlides / perPage);
+                let autoplayTimer;
+
+                function goToPage(page) {
+                    currentPage = page;
+                    const offset = currentPage * (100 / perPage) * perPage;
+                    reviewsTrack.style.transform = 'translateX(-' + offset + '%)';
+                    resetAutoplay();
+                }
+
+                function nextPage() {
+                    goToPage((currentPage + 1) % totalPages);
+                }
+
+                function resetAutoplay() {
+                    clearInterval(autoplayTimer);
+                    autoplayTimer = setInterval(nextPage, 5000);
+                }
+
+                function handleResize() {
+                    const newPerPage = window.innerWidth >= 768 ? 3 : 1;
+                    if (newPerPage !== perPage) {
+                        perPage = newPerPage;
+                        totalPages = Math.ceil(totalSlides / perPage);
+                        currentPage = 0;
+                        reviewsTrack.style.transform = 'translateX(0)';
+                        resetAutoplay();
+                    }
+                }
+
+                resetAutoplay();
+                window.addEventListener('resize', handleResize);
+
+                // Arrow controls
+                const prevBtn = document.getElementById('review-prev');
+                const nextBtn = document.getElementById('review-next');
+                if (prevBtn) prevBtn.addEventListener('click', () => {
+                    goToPage((currentPage - 1 + totalPages) % totalPages);
+                });
+                if (nextBtn) nextBtn.addEventListener('click', () => {
+                    nextPage();
+                });
+            }
+
+            // 6. Trust Ticker (mobile)
+            const ticks = document.querySelectorAll('.trust-tick');
+            if (ticks.length > 0) {
+                let tickIdx = 0;
+                setInterval(() => {
+                    ticks[tickIdx].classList.remove('opacity-100');
+                    ticks[tickIdx].classList.add('opacity-0');
+                    tickIdx = (tickIdx + 1) % ticks.length;
+                    ticks[tickIdx].classList.remove('opacity-0');
+                    ticks[tickIdx].classList.add('opacity-100');
+                }, 3000);
+            }
+
+            // 6. Mobile Sticky Cart Bar
+            const stickyCart = document.getElementById('mobile-sticky-cart');
+            const featuredSection = document.getElementById('featured');
+            if (stickyCart && featuredSection) {
+                const stickyName = document.getElementById('sticky-product-name');
+                const stickyPrice = document.getElementById('sticky-product-price');
+                const productObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            stickyCart.classList.remove('translate-y-full');
+                            stickyCart.classList.add('translate-y-0');
+                        } else {
+                            stickyCart.classList.add('translate-y-full');
+                            stickyCart.classList.remove('translate-y-0');
+                        }
+                    });
+                }, { threshold: 0.1 });
+                productObserver.observe(featuredSection);
+            }
+
+            // 7. Back to Top Button
+            const backToTop = document.getElementById('back-to-top');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 600) {
+                    backToTop.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-4');
+                    backToTop.classList.add('opacity-100', 'pointer-events-auto', 'translate-y-0');
+                } else {
+                    backToTop.classList.add('opacity-0', 'pointer-events-none', 'translate-y-4');
+                    backToTop.classList.remove('opacity-100', 'pointer-events-auto', 'translate-y-0');
+                }
+            });
+            backToTop.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+
+            // 6. Parallax Effect logic for specific images
             const parallaxImages = document.querySelectorAll('.parallax-img');
             window.addEventListener('scroll', () => {
                 let scrollY = window.pageYOffset;
